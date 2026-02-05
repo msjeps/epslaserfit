@@ -1,0 +1,30 @@
+{
+  "name": "Laser Fit - Entraînement EPS",
+  "short_name": "LaserFit",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#00ffcc",
+  "orientation": "portrait",
+  "description": "Application d'entraînement physique avec tir laser de précision pour les élèves de 5ème. Fonctionne 100% hors ligne.",
+  "id": "com.laserfit.eps",
+  "icons": [
+    {
+      "src": "./icon_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "sports", "health"],
+  "lang": "fr-FR",
+  "dir": "ltr",
+  "prefer_related_applications": false
+}
