@@ -1529,18 +1529,92 @@
             .header h1 {
                 font-size: 2rem;
             }
-            
+
             .timer-display {
                 font-size: 5rem;
             }
-            
+
             .counter-display {
                 font-size: 3.5rem;
             }
-            
+
             .score-value {
                 font-size: 4rem;
             }
+        }
+
+        /* === ADMIN / AIDE / NOUVELLE OBSERVATION === */
+        .admin-login-section { text-align: center; padding: 20px 0; }
+        .admin-login-section input[type="password"] {
+            width: 100%; padding: 14px 16px; border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 10px; font-size: 1.1rem; background: rgba(255,255,255,0.05);
+            color: var(--text); text-align: center; letter-spacing: 3px; margin: 15px 0;
+        }
+        .admin-panel-section { display: none; }
+        .admin-bareme-group { margin-bottom: 20px; }
+        .admin-bareme-group h4 {
+            font-size: 1rem; color: var(--secondary); margin-bottom: 10px;
+            padding-bottom: 5px; border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .admin-bareme-row {
+            display: grid; grid-template-columns: 1fr 80px; gap: 8px;
+            align-items: center; margin-bottom: 6px;
+        }
+        .admin-bareme-row label { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
+        .admin-bareme-row input[type="number"] {
+            width: 100%; padding: 8px; border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 8px; font-size: 0.95rem; background: rgba(255,255,255,0.05);
+            color: var(--text); text-align: center; font-weight: 700;
+        }
+        .admin-shooting-row {
+            display: grid; grid-template-columns: auto 1fr 80px; gap: 8px;
+            align-items: center; margin-bottom: 6px;
+        }
+        .admin-shooting-row span { font-size: 0.9rem; color: var(--text-dim); }
+        .admin-shooting-row input[type="number"] {
+            width: 100%; padding: 8px; border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 8px; font-size: 0.95rem; background: rgba(255,255,255,0.05);
+            color: var(--text); text-align: center; font-weight: 700;
+        }
+        .btn-admin-reset {
+            width: 100%; padding: 12px; margin-top: 15px;
+            background: rgba(255,51,102,0.15); border: 2px solid var(--danger);
+            color: var(--danger); border-radius: 10px; font-weight: 700;
+            font-size: 0.95rem; cursor: pointer; transition: all 0.3s ease;
+        }
+        .btn-admin-reset:hover { background: var(--danger); color: white; }
+        .btn-admin-save {
+            width: 100%; padding: 14px; margin-top: 10px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            border: none; color: #0a0a0a; border-radius: 10px; font-weight: 700;
+            font-size: 1rem; cursor: pointer; transition: all 0.3s ease;
+        }
+        .btn-admin-save:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,255,204,0.3); }
+
+        .aide-section { padding: 5px 0; }
+        .aide-section h4 {
+            font-size: 1rem; color: var(--secondary); margin: 15px 0 8px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .aide-section p, .aide-section ul { font-size: 0.9rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 8px; }
+        .aide-section ul { padding-left: 20px; }
+        .aide-section li { margin-bottom: 4px; }
+
+        .pending-obs-info {
+            padding: 10px 15px; margin: 10px 0; border-radius: 10px;
+            background: rgba(0,255,204,0.1); border-left: 4px solid var(--secondary);
+            font-size: 0.9rem; color: var(--text);
+        }
+        .btn-new-obs {
+            width: 100%; padding: 14px; margin-top: 10px;
+            background: rgba(0,255,204,0.15); border: 2px solid var(--secondary);
+            color: var(--secondary); border-radius: 10px; font-weight: 700;
+            font-size: 1rem; cursor: pointer; transition: all 0.3s ease;
+        }
+        .btn-new-obs:hover { background: var(--secondary); color: #0a0a0a; }
+        .credit-author {
+            text-align: center; font-size: 0.75rem; color: var(--text-dim);
+            margin-top: 15px; opacity: 0.7;
         }
     </style>
     <script src="qrcode.min.js"></script>
@@ -1604,6 +1678,17 @@
                 </select>
             </div>
         </div>
+        <div style="padding: 15px 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                <button class="btn btn-secondary btn-full" onclick="toggleSettings(); openAdmin()" style="font-size: 0.85rem; padding: 10px 8px;">
+                    <span>🔐 Config. avancée</span>
+                </button>
+                <button class="btn btn-secondary btn-full" onclick="toggleSettings(); openAide()" style="font-size: 0.85rem; padding: 10px 8px;">
+                    <span>❓ Aide</span>
+                </button>
+            </div>
+            <p class="credit-author">Créé par Nathalie Prenois — Collège Mont Saint Jean</p>
+        </div>
     </div>
     
     <div class="container">
@@ -1624,19 +1709,6 @@
                 </div>
                 
                 <div class="modal-body">
-                    <div class="settings-group">
-                        <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="toggleSoundSetting()">
-                            <span>🔊 Bips sonores</span>
-                            <div class="toggle-container">
-                                <input type="checkbox" id="soundToggleSettings" class="toggle-input" checked onclick="event.stopPropagation()">
-                                <div class="toggle-slider"></div>
-                            </div>
-                        </label>
-                        <small style="color: var(--text-dim); font-size: 0.85rem; margin-top: 5px; display: block;">
-                            Émet un bip au lancement et à la fin de chaque exercice
-                        </small>
-                    </div>
-                    
                     <div class="settings-group">
                         <label>🎨 Thème de couleur</label>
                         <div class="theme-selector">
@@ -1661,9 +1733,18 @@
                 </div>
                 
                 <div class="modal-footer">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                        <button class="btn btn-secondary btn-full" onclick="openAdmin()">
+                            <span>🔐 Configuration avancée</span>
+                        </button>
+                        <button class="btn btn-secondary btn-full" onclick="openAide()">
+                            <span>❓ Aide</span>
+                        </button>
+                    </div>
                     <button class="btn btn-primary btn-full" onclick="closeSettings()">
                         <span>Fermer</span>
                     </button>
+                    <p class="credit-author">Créé par Nathalie Prenois — Collège Mont Saint Jean</p>
                 </div>
             </div>
         </div>
@@ -2027,11 +2108,19 @@
                 <canvas id="qrCodeCanvas" style="display: none;"></canvas>
             </div>
             
+            <!-- Info observations archivées -->
+            <div id="pendingObsInfo" class="pending-obs-info" style="display: none;"></div>
+
+            <!-- Bouton Nouvelle observation (même observateur) -->
+            <button id="btnNewObs" class="btn-new-obs" onclick="newObservation()">
+                ↩ Nouvelle observation (même observateur)
+            </button>
+
             <!-- Bouton classement -->
             <button class="btn btn-secondary btn-full" onclick="showLeaderboard()" style="margin-top: 15px;">
                 <span>🏅 Voir le classement de classe</span>
             </button>
-            
+
             <button class="btn btn-primary btn-full" onclick="resetApp()">
                 <span>🔄 Nouvelle séance</span>
             </button>
@@ -2040,7 +2129,7 @@
 
     <script>
         // Barèmes
-        const EXERCISE_THRESHOLDS = {
+        let EXERCISE_THRESHOLDS = {
             'JUMPING JACK': [
                 { min: 0, max: 19, points: 0 },
                 { min: 20, max: 29, points: 10 },
@@ -2165,12 +2254,282 @@
             ],
         };
         
-        const SHOOTING_POINTS = {
+        let SHOOTING_POINTS = {
             3: 5,
             5: 10,
             8: 20
         };
-        
+
+        // Sauvegardes des valeurs par défaut (pour réinitialisation)
+        const DEFAULT_EXERCISE_THRESHOLDS = JSON.parse(JSON.stringify(EXERCISE_THRESHOLDS));
+        const DEFAULT_SHOOTING_POINTS = JSON.parse(JSON.stringify(SHOOTING_POINTS));
+
+        // Multi-observation : archivage des résultats (max 5 élèves)
+        const MAX_OBSERVATIONS = 5;
+        let pendingRows = [];
+
+        // Charger les barèmes personnalisés depuis localStorage
+        (function loadCustomBaremes() {
+            try {
+                const saved = localStorage.getItem('laserfit-custom-thresholds');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    Object.keys(parsed).forEach(key => {
+                        if (EXERCISE_THRESHOLDS[key]) {
+                            EXERCISE_THRESHOLDS[key] = parsed[key].map(t => ({
+                                min: t.min,
+                                max: t.max === null ? Infinity : t.max,
+                                points: t.points
+                            }));
+                        }
+                    });
+                }
+                const savedShooting = localStorage.getItem('laserfit-custom-shooting');
+                if (savedShooting) {
+                    const parsedS = JSON.parse(savedShooting);
+                    Object.keys(parsedS).forEach(key => {
+                        SHOOTING_POINTS[key] = parsedS[key];
+                    });
+                }
+            } catch(e) { console.log('Erreur chargement barèmes:', e); }
+        })();
+
+        // ========== ADMIN ==========
+        function openAdmin() {
+            closeSettings();
+            document.getElementById('adminLogin').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('adminPwd').value = '';
+            document.getElementById('adminModal').classList.remove('hidden');
+        }
+        function closeAdmin() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+        function checkAdminPwd() {
+            const pwd = document.getElementById('adminPwd').value || '';
+            if (pwd === 'ADMINPROF') {
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                buildAdminBaremes();
+                buildAdminShooting();
+            } else {
+                alert('Mot de passe incorrect');
+                if (navigator.vibrate) navigator.vibrate(200);
+            }
+        }
+        function buildAdminBaremes() {
+            const container = document.getElementById('adminBaremesContainer');
+            container.innerHTML = '';
+            Object.keys(EXERCISE_THRESHOLDS).forEach(exName => {
+                const group = document.createElement('div');
+                group.className = 'admin-bareme-group';
+                let html = `<h4>${exName}</h4>`;
+                EXERCISE_THRESHOLDS[exName].forEach((t, i) => {
+                    const maxDisplay = t.max === Infinity ? '∞' : t.max;
+                    const maxVal = t.max === Infinity ? '' : t.max;
+                    html += `<div class="admin-bareme-row">
+                        <label>${t.min}–${maxDisplay} rép. → </label>
+                        <input type="number" min="0" max="100" value="${t.points}"
+                            data-ex="${exName}" data-idx="${i}" data-field="points">
+                    </div>`;
+                });
+                group.innerHTML = html;
+                container.appendChild(group);
+            });
+        }
+        function buildAdminShooting() {
+            const container = document.getElementById('adminShootingContainer');
+            let html = '';
+            Object.keys(SHOOTING_POINTS).forEach(dist => {
+                html += `<div class="admin-shooting-row">
+                    <span>🎯</span>
+                    <span>Tir à ${dist}m</span>
+                    <input type="number" min="0" max="100" value="${SHOOTING_POINTS[dist]}"
+                        data-shooting-dist="${dist}">
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+        function saveAdminConfig() {
+            // Lire les barèmes exercices
+            document.querySelectorAll('#adminBaremesContainer input[data-ex]').forEach(inp => {
+                const exName = inp.dataset.ex;
+                const idx = parseInt(inp.dataset.idx);
+                const val = parseInt(inp.value) || 0;
+                if (EXERCISE_THRESHOLDS[exName] && EXERCISE_THRESHOLDS[exName][idx]) {
+                    EXERCISE_THRESHOLDS[exName][idx].points = val;
+                }
+            });
+            // Lire les points de tir
+            document.querySelectorAll('#adminShootingContainer input[data-shooting-dist]').forEach(inp => {
+                const dist = inp.dataset.shootingDist;
+                SHOOTING_POINTS[dist] = parseInt(inp.value) || 0;
+            });
+            // Sauvegarder dans localStorage (Infinity → null pour JSON)
+            const toSave = {};
+            Object.keys(EXERCISE_THRESHOLDS).forEach(key => {
+                toSave[key] = EXERCISE_THRESHOLDS[key].map(t => ({
+                    min: t.min, max: t.max === Infinity ? null : t.max, points: t.points
+                }));
+            });
+            localStorage.setItem('laserfit-custom-thresholds', JSON.stringify(toSave));
+            localStorage.setItem('laserfit-custom-shooting', JSON.stringify(SHOOTING_POINTS));
+            // Recalculer les maps normalisées
+            rebuildNormalizedMaps();
+            alert('Barèmes enregistrés avec succès !');
+            closeAdmin();
+        }
+        function resetToDefaults() {
+            if (!confirm('Réinitialiser tous les barèmes aux valeurs par défaut ?')) return;
+            // Restaurer les exercices
+            Object.keys(DEFAULT_EXERCISE_THRESHOLDS).forEach(key => {
+                EXERCISE_THRESHOLDS[key] = JSON.parse(JSON.stringify(DEFAULT_EXERCISE_THRESHOLDS[key]));
+            });
+            // Restaurer le tir
+            Object.keys(DEFAULT_SHOOTING_POINTS).forEach(key => {
+                SHOOTING_POINTS[key] = DEFAULT_SHOOTING_POINTS[key];
+            });
+            localStorage.removeItem('laserfit-custom-thresholds');
+            localStorage.removeItem('laserfit-custom-shooting');
+            rebuildNormalizedMaps();
+            buildAdminBaremes();
+            buildAdminShooting();
+            alert('Barèmes réinitialisés aux valeurs par défaut');
+        }
+        function rebuildNormalizedMaps() {
+            // Sera appelée après que normExName et les maps N soient définies
+            // On les reconstruit dynamiquement
+            if (typeof normExName === 'function') {
+                Object.keys(EXERCISE_THRESHOLDS).forEach(k => {
+                    EXERCISE_THRESHOLDS_N[normExName(k)] = EXERCISE_THRESHOLDS[k];
+                });
+            }
+        }
+
+        // ========== AIDE ==========
+        function openAide() {
+            closeSettings();
+            document.getElementById('aideModal').classList.remove('hidden');
+        }
+        function closeAide() {
+            document.getElementById('aideModal').classList.add('hidden');
+        }
+
+        // ========== NOUVELLE OBSERVATION ==========
+        function newObservation() {
+            if (state.results.length === 0) {
+                alert('Aucune donnée à archiver');
+                return;
+            }
+            if (pendingRows.length >= MAX_OBSERVATIONS) {
+                alert('Maximum ' + MAX_OBSERVATIONS + ' observations atteint. Téléchargez le CSV puis lancez une nouvelle séance.');
+                return;
+            }
+            // Archiver l'observation courante
+            pendingRows.push({
+                studentName: state.studentName,
+                observerName: state.observerName,
+                className: state.className,
+                groupName: state.groupName,
+                sessionDate: state.sessionDate,
+                sessionTime: state.sessionTime,
+                results: JSON.parse(JSON.stringify(state.results)),
+                totalScore: state.results.reduce((sum, r) => sum + r.totalPoints, 0)
+            });
+
+            const obsCount = pendingRows.length;
+            alert('Observation ' + obsCount + '/' + MAX_OBSERVATIONS + ' archivée pour ' + state.studentName);
+
+            // Conserver : observateur, classe, groupe, config exercices/temps
+            const keepObserver = state.observerName;
+            const keepClass = state.className;
+            const keepGroup = state.groupName;
+            const keepExercises = state.exercises.slice();
+            const keepExerciseTypes = state.exerciseTypes.slice();
+            const keepNumExercises = state.numExercises;
+            const keepNumShooting = state.numShootingSessions;
+            const keepExerciseTime = state.exerciseTime;
+            const keepPauseTime = state.pauseTime;
+            const keepShootingDistance = state.shootingDistance;
+            const keepSound = state.soundEnabled;
+            const keepDate = state.sessionDate;
+            const keepTime = state.sessionTime;
+
+            // Nettoyer QR code
+            const qrContainer = document.getElementById('qrCodeContainer');
+            qrContainer.style.display = 'none';
+            qrContainer.innerHTML = '<canvas id="qrCodeCanvas" style="display: none;"></canvas>';
+
+            // Réinitialiser les résultats et la séquence
+            state.results = [];
+            state.sequence = [];
+            state.currentSequenceIndex = 0;
+            state.currentReps = 0;
+            state.currentHits = 0;
+            state.tabataTime = keepExerciseTime;
+            state.tabataRunning = false;
+            if (state.tabataInterval) clearInterval(state.tabataInterval);
+            state.tabataInterval = null;
+            state.isInWorkPhase = true;
+            state.totalTime = 0;
+            state.totalTimeRunning = false;
+            if (state.totalTimeInterval) clearInterval(state.totalTimeInterval);
+            state.totalTimeInterval = null;
+
+            // Restaurer les configs
+            state.observerName = keepObserver;
+            state.className = keepClass;
+            state.groupName = keepGroup;
+            state.exercises = keepExercises;
+            state.exerciseTypes = keepExerciseTypes;
+            state.numExercises = keepNumExercises;
+            state.numShootingSessions = keepNumShooting;
+            state.exerciseTime = keepExerciseTime;
+            state.pauseTime = keepPauseTime;
+            state.shootingDistance = keepShootingDistance;
+            state.soundEnabled = keepSound;
+            state.sessionDate = keepDate;
+            state.sessionTime = keepTime;
+            state.studentName = '';
+
+            // Vider le champ pratiquant et retourner à l'écran info
+            document.getElementById('studentName').value = '';
+            document.getElementById('observerName').value = keepObserver;
+            document.getElementById('className').value = keepClass;
+            document.getElementById('groupName').value = keepGroup;
+
+            // Masquer résultats, afficher écran info
+            document.getElementById('resultsScreen').classList.add('hidden');
+            document.getElementById('infoScreen').classList.remove('hidden');
+        }
+
+        function updatePendingObsUI() {
+            const info = document.getElementById('pendingObsInfo');
+            const btn = document.getElementById('btnNewObs');
+            if (!info || !btn) return;
+
+            const totalArchived = pendingRows.length;
+            if (totalArchived > 0) {
+                const names = pendingRows.map(r => r.studentName).join(', ');
+                info.style.display = 'block';
+                info.innerHTML = '📋 ' + totalArchived + ' observation' + (totalArchived > 1 ? 's' : '')
+                    + ' archivée' + (totalArchived > 1 ? 's' : '')
+                    + ' : ' + names;
+            } else {
+                info.style.display = 'none';
+            }
+
+            if (totalArchived >= MAX_OBSERVATIONS) {
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+                btn.textContent = 'Maximum ' + MAX_OBSERVATIONS + ' observations atteint';
+            } else {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.textContent = '↩ Nouvelle observation (même observateur)';
+            }
+        }
+
         // Fonction pour adapter les seuils en fonction du temps sélectionné
         // Les barèmes sont calibrés pour 45 secondes
         function getAdaptedThresholds(exerciseName, timeInSeconds) {
@@ -3261,7 +3620,7 @@
 
         // Index normalisés (pour éviter les clés qui ne matchent pas à cause des accents)
         const EXERCISE_DEMOS_N = Object.fromEntries(Object.entries(EXERCISE_DEMOS).map(([k,v]) => [normExName(k), v]));
-        const EXERCISE_THRESHOLDS_N = Object.fromEntries(Object.entries(EXERCISE_THRESHOLDS).map(([k,v]) => [normExName(k), v]));
+        let EXERCISE_THRESHOLDS_N = Object.fromEntries(Object.entries(EXERCISE_THRESHOLDS).map(([k,v]) => [normExName(k), v]));
         const EXERCISE_INSTRUCTIONS_N = Object.fromEntries(Object.entries(EXERCISE_INSTRUCTIONS).map(([k,v]) => [normExName(k), v]));
 
         // Réordonner les ateliers dans le récapitulatif (↑ / ↓)
@@ -5180,227 +5539,199 @@
             
             // Sauvegarder dans le classement
             saveToLeaderboard(sessionData);
+
+            // Mettre à jour l'UI des observations archivées
+            updatePendingObsUI();
         }
         
-        // Fonction pour générer et télécharger le CSV
+        // Fonction pour générer et télécharger le CSV (inclut toutes les observations archivées)
         function downloadCSV() {
+            // Collecter toutes les observations : archivées + courante
+            const allObs = pendingRows.slice();
+            if (state.results.length > 0) {
+                allObs.push({
+                    studentName: state.studentName,
+                    observerName: state.observerName,
+                    className: state.className,
+                    groupName: state.groupName,
+                    sessionDate: state.sessionDate,
+                    sessionTime: state.sessionTime,
+                    results: state.results,
+                    totalScore: state.results.reduce((sum, r) => sum + r.totalPoints, 0)
+                });
+            }
+            if (allObs.length === 0) return;
+
+            // Déterminer le nombre max d'exercices parmi toutes les observations
+            const maxEx = Math.max(...allObs.map(o => o.results.length));
+
             // Construire les en-têtes
             let headers = ['Date', 'Heure', 'Classe', 'Groupe', 'Nom du pratiquant', 'Nom de l\'observateur/coach'];
-            
-            // Ajouter les colonnes pour chaque exercice
-            state.results.forEach((result, index) => {
-                const exerciseNum = index + 1;
-                headers.push(`Nom exercice ${exerciseNum}`);
-                headers.push(`Répétitions/Tirs exercice ${exerciseNum}`);
-                headers.push(`Points exercice ${exerciseNum}`);
-            });
+            for (let i = 1; i <= maxEx; i++) {
+                headers.push(`Nom exercice ${i}`);
+                headers.push(`Répétitions/Tirs exercice ${i}`);
+                headers.push(`Points exercice ${i}`);
+            }
             headers.push('Total points séance');
-            
-            // Construire la ligne de données
-            let row = [
-                state.sessionDate,
-                state.sessionTime,
-                state.className,
-                state.groupName || '',
-                state.studentName,
-                state.observerName
-            ];
-            
-            // Ajouter les données de chaque exercice
-            state.results.forEach(result => {
-                row.push(result.name);
-                row.push(result.reps || result.hits || 0);
-                row.push(result.totalPoints);
+
+            // Construire les lignes de données
+            const rows = allObs.map(obs => {
+                let row = [
+                    obs.sessionDate, obs.sessionTime, obs.className,
+                    obs.groupName || '', obs.studentName, obs.observerName
+                ];
+                obs.results.forEach(result => {
+                    row.push(result.name);
+                    row.push(result.reps || result.hits || 0);
+                    row.push(result.totalPoints);
+                });
+                // Compléter si moins d'exercices que le max
+                for (let i = obs.results.length; i < maxEx; i++) {
+                    row.push(''); row.push(''); row.push('');
+                }
+                row.push(obs.totalScore);
+                return row.join(';');
             });
-            
-            // Calculer et ajouter le total
-            const totalScore = state.results.reduce((sum, result) => sum + result.totalPoints, 0);
-            row.push(totalScore);
-            
+
             // Créer le contenu CSV avec point-virgule (standard Excel français)
-            const csvContent = [
-                headers.join(';'),
-                row.join(';')
-            ].join('\n');
-            
+            const csvContent = [headers.join(';'), ...rows].join('\n');
+
             // Ajouter le BOM UTF-8 pour Excel
             const BOM = '\uFEFF';
-            
+
+            // Nom de fichier
+            const obsCount = allObs.length;
+            const filename = obsCount > 1
+                ? `laserfit_${state.className.replace(/\s+/g, '_')}_${obsCount}obs_${state.sessionDate}.csv`
+                : `laserfit_${state.studentName.replace(/\s+/g, '_')}_${state.sessionDate}_${state.sessionTime.replace(':', '')}.csv`;
+
             // Télécharger le fichier
             const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
-            link.setAttribute('download', `laserfit_${state.studentName.replace(/\s+/g, '_')}_${state.sessionDate}_${state.sessionTime.replace(':', '')}.csv`);
+            link.setAttribute('download', filename);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         }
         
-        // Fonction pour générer un QR Code scannable
+        // Fonction pour générer un QR Code scannable (inclut toutes les observations)
+        // Format multi-lignes compatible SCAN EPS :
+        //   Ligne 1 : LASERFIT|classe|date|observateur
+        //   Lignes 2+ : pratiquant;ex1;reps1;pts1;ex2;reps2;pts2;...;total
         function generateQRCode() {
-            console.log('🎯 === GÉNÉRATION QR CODE === 🎯');
-            console.log('Génération du QR Code démarrée...');
-            
-            // Générer le CSV complet pour le QR code
-            let headers = ['Date', 'Heure', 'Classe', 'Groupe', 'Pratiquant', 'Coach'];
-            state.results.forEach((result, index) => {
-                headers.push(`Ex${index + 1}`);
-                headers.push(`Reps${index + 1}`);
-                headers.push(`Pts${index + 1}`);
+            console.log('=== GENERATION QR CODE ===');
+
+            // Collecter toutes les observations : archivées + courante
+            const allObs = pendingRows.slice();
+            if (state.results.length > 0) {
+                allObs.push({
+                    studentName: state.studentName,
+                    observerName: state.observerName,
+                    className: state.className,
+                    groupName: state.groupName,
+                    sessionDate: state.sessionDate,
+                    sessionTime: state.sessionTime,
+                    results: state.results,
+                    totalScore: state.results.reduce((sum, r) => sum + r.totalPoints, 0)
+                });
+            }
+            if (allObs.length === 0) return;
+
+            // Construire le payload multi-lignes compatible SCAN EPS
+            const header = 'LASERFIT|' + (state.className || '') + '|' + (state.sessionDate || '') + '|' + (state.observerName || '');
+            const dataLines = allObs.map(obs => {
+                const parts = [obs.studentName];
+                obs.results.forEach(r => {
+                    // Nom exercice abrégé (max 8 car.)
+                    const shortName = (r.name || '').substring(0, 8);
+                    parts.push(shortName);
+                    parts.push(r.reps || r.hits || 0);
+                    parts.push(r.totalPoints);
+                });
+                parts.push(obs.totalScore);
+                return parts.join(';');
             });
-            headers.push('Total');
-            
-            let row = [
-                state.sessionDate,
-                state.sessionTime,
-                state.className,
-                state.groupName || '',
-                state.studentName,
-                state.observerName
-            ];
-            
-            state.results.forEach(result => {
-                row.push(result.name.replace(/\s+/g, '_'));
-                row.push(result.reps || result.hits || 0);
-                row.push(result.totalPoints);
-            });
-            
-            const totalScore = state.results.reduce((sum, result) => sum + result.totalPoints, 0);
-            row.push(totalScore);
-            
-            const csvData = headers.join(';') + '\n' + row.join(';');
-            
-            console.log('📊 Données CSV:', csvData);
-            
+
+            let textToEncode = [header, ...dataLines].join('\n');
+
+            // Si trop long, tronquer comme VB EPS
+            if (textToEncode.length > 2000) {
+                const maxLines = Math.min(dataLines.length, 3);
+                textToEncode = [header, ...dataLines.slice(0, maxLines)].join('\n')
+                    + '\n...+' + (allObs.length - maxLines) + ' obs';
+            }
+
+            console.log('Payload QR (' + textToEncode.length + ' chars):', textToEncode);
+
             const qrContainer = document.getElementById('qrCodeContainer');
-            if (!qrContainer) {
-                console.error('❌ Container QR Code introuvable (ID: qrCodeContainer)');
+            if (!qrContainer) return;
+
+            qrContainer.style.display = 'block';
+            qrContainer.innerHTML = '';
+
+            const inner = document.createElement('div');
+            inner.style.cssText = 'display:flex; flex-direction:column; align-items:center; gap:10px;';
+            qrContainer.appendChild(inner);
+
+            const qrDiv = document.createElement('div');
+            qrDiv.style.cssText = 'width:280px; height:280px; padding:10px; background:white; border-radius:12px;';
+            inner.appendChild(qrDiv);
+
+            // Essai progressif : L (max capacité) puis M
+            let success = false;
+            const levels = [QRCode.CorrectLevel.L, QRCode.CorrectLevel.M];
+
+            for (let i = 0; i < levels.length; i++) {
+                try {
+                    qrDiv.innerHTML = '';
+                    new QRCode(qrDiv, {
+                        text: textToEncode,
+                        width: 260,
+                        height: 260,
+                        correctLevel: levels[i]
+                    });
+                    success = true;
+                    console.log('QR Code genere (niveau ' + (i === 0 ? 'L' : 'M') + ')');
+                    break;
+                } catch (e) {
+                    console.warn('Echec niveau ' + (i === 0 ? 'L' : 'M') + ':', e.message);
+                }
+            }
+
+            if (!success) {
+                qrContainer.innerHTML = `
+                    <div style="padding: 20px; background: rgba(255, 170, 0, 0.1); border-radius: 12px; border: 2px solid var(--tertiary); max-width: 400px; margin: 0 auto; text-align:center;">
+                        <h3 style="color: var(--tertiary); margin-top: 0;">Donnees trop volumineuses pour un QR Code</h3>
+                        <p style="color: var(--text); font-size: 0.9rem; margin: 15px 0;">
+                            ${allObs.length} observation${allObs.length > 1 ? 's' : ''} — utilisez le CSV.
+                        </p>
+                    </div>`;
                 return;
             }
-            
-            console.log('✅ Container trouvé:', qrContainer);
-            
-            // Essayer plusieurs APIs de QR code dans l'ordre
-            const qrApis = [
-                // API 1: QR Server (la plus stable)
-                `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(csvData)}`,
-                // API 2: GoQR
-                `https://api.qr-code-generator.com/v1/create?access-token=free&qr_code_text=${encodeURIComponent(csvData)}&image_format=PNG&image_width=300`,
-                // API 3: QRTag
-                `https://qrtag.net/api/qr.png?url=${encodeURIComponent(csvData)}`
-            ];
-            
-            let currentApiIndex = 0;
-            
-            const tryNextApi = () => {
-                if (currentApiIndex >= qrApis.length) {
-                    console.error('❌ Toutes les APIs ont échoué');
-                    console.log('🔄 Affichage du fallback...');
-                    showFallbackQR();
-                    return;
-                }
-                
-                const qrUrl = qrApis[currentApiIndex];
-                console.log(`🔍 Essai API ${currentApiIndex + 1}:`, qrUrl.substring(0, 50) + '...');
-                
-                const qrImg = new Image();
-                qrImg.crossOrigin = 'anonymous';
-                
-                qrImg.onload = function() {
-                    console.log(`✅ QR code chargé avec succès (API ${currentApiIndex + 1})`);
-                    displayQRCode(qrImg);
-                };
-                
-                qrImg.onerror = function(e) {
-                    console.warn(`⚠️ API ${currentApiIndex + 1} a échoué, essai suivant...`);
-                    currentApiIndex++;
-                    setTimeout(tryNextApi, 500);
-                };
-                
-                qrImg.src = qrUrl;
-            };
-            
-            const displayQRCode = (img) => {
-                console.log('📱 Affichage du QR Code...');
-                qrContainer.innerHTML = `
-                    <div style="padding: 20px; background: white; border-radius: 12px; border: 2px solid var(--secondary); max-width: 400px; margin: 0 auto;">
-                        <h3 style="color: var(--secondary); margin-top: 0; text-align: center;">📱 QR Code de la séance</h3>
-                        
-                        <div style="text-align: center; margin: 20px 0;">
-                            <img src="${img.src}" style="max-width: 300px; border: 2px solid #ddd; border-radius: 8px; padding: 10px; background: white;" alt="QR Code">
-                        </div>
-                        
-                        <div style="background: rgba(0, 255, 204, 0.1); padding: 15px; border-radius: 8px; margin: 15px 0; color: #1a1a2e;">
-                            <div style="font-size: 0.9rem; line-height: 1.6;">
-                                <strong style="color: var(--secondary);">📊 Contenu du QR Code :</strong><br>
-                                📅 ${state.sessionDate} à ${state.sessionTime}<br>
-                                🏫 ${state.className}${state.groupName ? ' - ' + state.groupName : ''}<br>
-                                👤 ${state.studentName}<br>
-                                🎯 Score : ${totalScore} points<br>
-                                📋 + Détails de tous les exercices
-                            </div>
-                        </div>
-                        
-                        <div style="margin-top: 15px; padding: 12px; background: rgba(0, 0, 0, 0.05); border-radius: 8px; text-align: center; color: #666; font-size: 0.85rem;">
-                            💡 Scannez ce QR code avec votre smartphone pour accéder aux données CSV complètes
-                        </div>
-                    </div>
-                `;
-                qrContainer.style.display = 'block';
-                console.log('✅ QR Code affiché avec succès');
-            };
-            
-            const showFallbackQR = () => {
-                console.log('📋 Affichage du fallback CSV...');
-                qrContainer.innerHTML = `
-                    <div style="padding: 20px; background: rgba(255, 170, 0, 0.1); border-radius: 12px; border: 2px solid var(--tertiary); max-width: 400px; margin: 0 auto;">
-                        <h3 style="color: var(--tertiary); margin-top: 0; text-align: center;">⚠️ QR Code non disponible</h3>
-                        
-                        <p style="color: #1a1a2e; text-align: center; margin: 15px 0;">
-                            La génération du QR code nécessite une connexion internet active.
-                        </p>
-                        
-                        <div style="background: white; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                            <strong style="color: var(--secondary);">📋 Données CSV :</strong><br>
-                            <textarea readonly style="width: 100%; min-height: 100px; margin-top: 10px; padding: 10px; font-family: monospace; font-size: 0.8rem; border: 1px solid #ddd; border-radius: 4px; resize: vertical; color: #1a1a2e;">${csvData}</textarea>
-                        </div>
-                        
-                        <div style="background: rgba(0, 255, 204, 0.1); padding: 15px; border-radius: 8px; margin: 15px 0; color: #1a1a2e;">
-                            <div style="font-size: 0.9rem; line-height: 1.6;">
-                                <strong style="color: var(--secondary);">📊 Résumé de la séance :</strong><br>
-                                📅 ${state.sessionDate} à ${state.sessionTime}<br>
-                                🏫 ${state.className}${state.groupName ? ' - ' + state.groupName : ''}<br>
-                                👤 ${state.studentName}<br>
-                                🎯 Score : ${totalScore} points
-                            </div>
-                        </div>
-                        
-                        <div style="margin-top: 15px; padding: 12px; background: rgba(0, 255, 204, 0.1); border-radius: 8px; text-align: center; color: #1a1a2e; font-size: 0.9rem;">
-                            💡 Utilisez le bouton "📊 Télécharger CSV" ci-dessus pour obtenir le fichier complet
-                        </div>
-                        
-                        <button onclick="generateQRCode()" style="width: 100%; margin-top: 15px; padding: 12px; background: var(--secondary); color: #1a1a2e; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem;">
-                            🔄 Réessayer la génération
-                        </button>
-                    </div>
-                `;
-                qrContainer.style.display = 'block';
-                console.log('✅ Fallback CSV affiché avec succès');
-            };
-            
-            // Démarrer les essais
-            console.log('🚀 Lancement des essais APIs...');
-            tryNextApi();
+
+            // Résumé sous le QR code
+            const obsNames = allObs.map(o => o.studentName).join(', ');
+            const totalAll = allObs.reduce((s, o) => s + o.totalScore, 0);
+            const hint = document.createElement('div');
+            hint.style.cssText = 'font-size:0.85rem; color:var(--text-dim); text-align:center; max-width:300px; line-height:1.5; margin-top:5px;';
+            hint.innerHTML = '<strong>' + allObs.length + ' observation' + (allObs.length > 1 ? 's' : '') + '</strong> : ' + obsNames
+                + '<br>Score total : ' + totalAll + ' pts'
+                + '<br><span style="font-size:0.8rem;">Scannez avec SCAN EPS</span>';
+            inner.appendChild(hint);
         }
         
         function resetApp() {
+            // Vider les observations archivées
+            pendingRows = [];
+
             // Cacher et nettoyer le résumé détaillé
             let qrContainer = document.getElementById('qrCodeContainer');
             qrContainer.style.display = 'none';
             qrContainer.innerHTML = '<canvas id="qrCodeCanvas" style="display: none;"></canvas>';
-            
+
             // Réinitialiser l'état
             state = {
                 studentName: '',
@@ -5479,44 +5810,145 @@
             }
         }
         
-        // CORRIGÉ : DOMContentLoaded unifié (fusion des 2 listeners)
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('=== INITIALISATION LASER FIT ===');
-            
-            // 1. Mettre à jour date/heure
+        window.addEventListener('DOMContentLoaded', function() {
             updateDateTime();
-            
-            // 2. Vérifier l'écran initial
-            const initialScreen = document.getElementById('initialModeScreen');
-            if (initialScreen && initialScreen.classList.contains('hidden')) {
-                console.warn('⚠️ Écran initial caché - correction');
-                initialScreen.classList.remove('hidden');
-            }
-            
-            // 3. Masquer les autres écrans
-            const screensToHide = ['infoScreen', 'teamSetupScreen', 'teamRelayScreen', 
-                                   'configScreen', 'sessionScreen', 'resultsScreen'];
-            screensToHide.forEach(screenId => {
-                const screen = document.getElementById(screenId);
-                if (screen && !screen.classList.contains('hidden')) {
-                    screen.classList.add('hidden');
-                }
-            });
-            
-            console.log('✅ Application initialisée');
+        });
+
+   
+      // Service Worker (offline) — désactivé dans le contexte APK (WebView)
+      if ('serviceWorker' in navigator && !location.hostname.includes('appassets.androidplatform.net')) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => {
+          console.log('✅ SW enregistré ! Scope:', reg.scope);
+          // Force la mise à jour si une nouvelle version existe
+          reg.update();
+        })
+        .catch(err => console.log('❌ Échec SW:', err));
+    });
+  }
+      
+      // CORRECTION: Force un affichage correct de l'écran initial
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('=== VÉRIFICATION ÉCRAN INITIAL ===');
+        const initialScreen = document.getElementById('initialModeScreen');
+        if (initialScreen && initialScreen.classList.contains('hidden')) {
+          console.warn('⚠️ Écran initial caché au chargement - correction en cours');
+          initialScreen.classList.remove('hidden');
+        }
+        
+        // Masquer tous les autres écrans pour être sûr
+        const screensToHide = ['infoScreen', 'teamSetupScreen', 'teamRelayScreen', 'configScreen', 'sessionScreen', 'resultsScreen'];
+        screensToHide.forEach(screenId => {
+          const screen = document.getElementById(screenId);
+          if (screen && !screen.classList.contains('hidden')) {
+            console.log('Masquage de:', screenId);
+            screen.classList.add('hidden');
+          }
         });
         
-        // Service Worker - Mode offline
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => {
-                        console.log('✅ Service Worker enregistré ! Scope:', reg.scope);
-                        reg.update(); // Force la mise à jour
-                    })
-                    .catch(err => console.log('❌ Échec Service Worker:', err));
-            });
-        }
+        console.log('✅ Écran initial configuré correctement');
+      });
     </script>
+    <!-- Modal Configuration Avancée (Admin) — hors du container pour z-index correct -->
+    <div id="adminModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔐 Configuration avancée</h2>
+                <button class="close-btn" onclick="closeAdmin()">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- Login -->
+                <div id="adminLogin" class="admin-login-section">
+                    <p style="color: var(--text-dim); margin-bottom: 10px;">Accès réservé au professeur</p>
+                    <input type="password" id="adminPwd" placeholder="Mot de passe" autocomplete="off" onkeydown="if(event.key==='Enter')checkAdminPwd()">
+                    <button class="btn btn-primary btn-full" onclick="checkAdminPwd()">
+                        <span>Valider</span>
+                    </button>
+                </div>
+                <!-- Panel admin (caché tant que pas authentifié) -->
+                <div id="adminPanel" class="admin-panel-section">
+                    <h3 style="color: var(--secondary); margin-bottom: 15px;">📊 Barèmes des exercices</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 15px;">
+                        Modifiez les seuils de répétitions pour chaque palier de points.<br>
+                        Les barèmes sont calibrés pour 45 secondes et s'adaptent automatiquement à la durée choisie.
+                    </p>
+                    <div id="adminBaremesContainer"></div>
+
+                    <h3 style="color: var(--secondary); margin: 25px 0 15px;">🎯 Points de tir</h3>
+                    <div id="adminShootingContainer"></div>
+
+                    <button class="btn-admin-save" onclick="saveAdminConfig()">
+                        ✅ Enregistrer les modifications
+                    </button>
+                    <button class="btn-admin-reset" onclick="resetToDefaults()">
+                        🔄 Réinitialiser aux valeurs par défaut
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Aide — hors du container pour z-index correct -->
+    <div id="aideModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>❓ Aide</h2>
+                <button class="close-btn" onclick="closeAide()">✕</button>
+            </div>
+            <div class="modal-body aide-section">
+                <h4>🎮 Fonctionnalités de l'application</h4>
+                <ul>
+                    <li><strong>Mode Solo :</strong> Un pratiquant réalise un circuit d'exercices fitness alternés avec des tirs de précision laser. Un observateur/coach compte les répétitions.</li>
+                    <li><strong>Mode Équipe :</strong> Plusieurs équipes s'affrontent en relais. Chaque coureur enchaîne exercices et tirs, puis passe au suivant.</li>
+                    <li><strong>Exercices :</strong> 14 exercices disponibles (jumping jacks, burpees, squats, pompes, etc.) avec barèmes adaptés à la durée choisie.</li>
+                    <li><strong>Tirs laser :</strong> Tirs à 3m (5 pts), 5m (10 pts) ou 8m (20 pts) — le coach valide chaque tir réussi.</li>
+                    <li><strong>Résultats :</strong> Score total, détail par exercice, badges de performance, graphique de progression des tirs.</li>
+                    <li><strong>Classement :</strong> Classement de la classe sauvegardé localement sur la tablette.</li>
+                    <li><strong>Export :</strong> Téléchargement CSV (compatible Excel) et QR Code pour partage rapide.</li>
+                    <li><strong>Nouvelle observation :</strong> Un dispensé peut observer jusqu'à 5 pratiquants différents sans reconfigurer la séance.</li>
+                </ul>
+
+                <h4>🔐 Configuration professeur</h4>
+                <ul>
+                    <li>Accessible via <strong>Réglages → Configuration avancée</strong> (mot de passe : demander au professeur).</li>
+                    <li>Permet de modifier les barèmes de tous les exercices et les points de tir.</li>
+                    <li>Bouton « Réinitialiser aux valeurs par défaut » pour revenir aux barèmes d'origine.</li>
+                </ul>
+
+                <h4>📱 Installation sur tablette Android (APK)</h4>
+                <ul>
+                    <li>Transférer le fichier <strong>.apk</strong> sur la tablette (USB, partage Wi-Fi, QR code).</li>
+                    <li>Activer « Sources inconnues » dans les paramètres si nécessaire.</li>
+                    <li>Ouvrir le fichier APK et installer.</li>
+                    <li>L'application fonctionne <strong>100% hors-ligne</strong>, aucune connexion internet nécessaire.</li>
+                </ul>
+
+                <h4>📱 Installation sur smartphone/tablette (PWA)</h4>
+                <ul>
+                    <li><strong>Android (Chrome) :</strong> Ouvrir le site web → menu ⋮ → « Ajouter à l'écran d'accueil ».</li>
+                    <li><strong>iPhone/iPad (Safari) :</strong> Ouvrir le site web → bouton partage ↑ → « Sur l'écran d'accueil ».</li>
+                    <li>L'application s'installe comme une app native et fonctionne hors-ligne après le premier chargement.</li>
+                </ul>
+
+                <h4>⚙️ Réglages disponibles</h4>
+                <ul>
+                    <li><strong>Thème de couleur :</strong> 4 thèmes visuels au choix.</li>
+                    <li><strong>Bips sonores :</strong> Signal de début/fin d'exercice.</li>
+                    <li><strong>Mode sombre :</strong> Réduit la luminosité pour l'usage en extérieur.</li>
+                    <li><strong>Date/Heure auto :</strong> Mise à jour automatique à chaque séance.</li>
+                </ul>
+
+                <p style="text-align: center; margin-top: 20px; color: var(--text-dim);">
+                    <em>Créé par Nathalie Prenois — Collège Mont Saint Jean</em>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-full" onclick="closeAide()">
+                    <span>Fermer</span>
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
