@@ -1708,6 +1708,7 @@
         }
     </style>
     <script src="qrcode.min.js"></script>
+    <script src="jsqr.js"></script>
 </head>
 <body>
     <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
@@ -1784,7 +1785,7 @@
     <div class="container">
         <div class="header">
             <h1>⚡ Laser Fit ⚡</h1>
-            <p class="version-app">Version 2.1</p>
+            <p class="version-app">Version 2.2</p>
             <div class="subtitle">Fitness + Tir Laser de Précision</div>
             <button class="settings-btn" onclick="openSettings()" title="Réglages">
                 <span>⚙️</span>
@@ -1862,6 +1863,12 @@
                         <div class="mode-icon">👥</div>
                         <div class="mode-name">Mode Équipe</div>
                         <div class="mode-desc">Relais par équipes avec score collectif</div>
+                    </div>
+                    
+                    <div class="mode-option" style="grid-column: 1 / -1;" onclick="openClassRanking()">
+                        <div class="mode-icon">🏁</div>
+                        <div class="mode-name">Classement des équipes</div>
+                        <div class="mode-desc">Tablette enseignant : saisir les scores annoncés par les observateurs</div>
                     </div>
                 </div>
             </div>
@@ -2993,7 +3000,7 @@
             waitingForNextRunner: false // Flag pour éviter l'auto-start entre coureurs
         };
         
-        // Couleurs d'équipes (6 couleurs pour 6 équipes possibles en parallèle)
+        // Couleurs d'équipes (8 couleurs pour 8 équipes possibles en parallèle, une par tablette)
         const TEAM_COLORS = [
             { name: 'Rouge', emoji: '🔴', color: '#FF3366', border: '#FF0033' },
             { name: 'Bleue', emoji: '🔵', color: '#3366FF', border: '#0033FF' },
@@ -3001,6 +3008,8 @@
             { name: 'Jaune', emoji: '🟡', color: '#FFCC33', border: '#FF9900' },
             { name: 'Violette', emoji: '🟣', color: '#9933FF', border: '#6600CC' },
             { name: 'Orange', emoji: '🟠', color: '#FF9933', border: '#FF6600' },
+            { name: 'Blanche', emoji: '⚪', color: '#EEEEEE', border: '#CCCCCC' },
+            { name: 'Marron', emoji: '🟤', color: '#A0693C', border: '#7A4A1E' },
         ];
         
         // Fonction pour jouer un bip sonore
@@ -5886,6 +5895,27 @@
                 current.score > best.score ? current : best
             );
             
+            // Bloc "à annoncer" (mode 1 équipe par tablette) : gros chiffres lisibles à distance
+            let heroHTML = '';
+            if (isParallel) {
+                const nbPassages = winnerResults.length;
+                const moyenne = nbPassages > 0 ? (Math.round(winner.totalScore / nbPassages * 10) / 10).toString().replace('.', ',') : '-';
+                heroHTML = `
+                    <div style="margin: 0 0 20px 0; padding: 24px 15px; text-align: center; background: rgba(255, 255, 255, 0.05); border: 4px solid ${winner.border}; border-radius: 16px;">
+                        <div style="font-size: 1.8rem; font-weight: 700;">${winner.emoji} Équipe ${esc(winner.name)}</div>
+                        <div style="font-size: 6rem; font-weight: 900; line-height: 1.1; color: var(--text);">${winner.totalScore}</div>
+                        <div style="font-size: 1.5rem; font-weight: 700;">points au total</div>
+                        <div style="font-size: 1.4rem; margin-top: 12px; color: var(--tertiary); font-weight: 700;">
+                            ${nbPassages} passage${nbPassages > 1 ? 's' : ''} • moyenne ${moyenne} pts
+                        </div>
+                        <div style="font-size: 0.9rem; margin-top: 12px; color: var(--text-dim);">
+                            À annoncer à l'enseignant, ou à lui faire scanner :
+                        </div>
+                        <div id="teamQrBox" style="display: flex; justify-content: center; margin-top: 12px;"></div>
+                    </div>
+                `;
+            }
+            
             const teamTitle = isParallel 
                 ? `📊 Détail de l'équipe ${winner.emoji} ${esc(winner.name)}`
                 : `📊 Détail Équipe ${esc(winner.name)} (Gagnante) ${winner.emoji}`;
@@ -5900,7 +5930,7 @@
             `;
             
             winnerResults.forEach(result => {
-                const isMVP = result.runnerName === mvp.runnerName;
+                const isMVP = result === mvp;
                 detailHTML += `
                     <div style="padding: 10px; margin: 5px 0; background: rgba(255, 255, 255, 0.05); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
                         <span>• ${esc(result.runnerName)}</span>
@@ -5935,6 +5965,7 @@
                     </div>
                     
                     <div class="modal-body">
+                        ${heroHTML}
                         ${modeInfoHTML}
                         ${timeInfoHTML}
                         ${podiumHTML}
@@ -5957,6 +5988,27 @@
             `;
             
             document.body.appendChild(modal);
+            if (isParallel) renderTeamQR(winner, winnerResults.length);
+        }
+        
+        // QR de l'équipe : lu par le « Classement des équipes » de la tablette enseignant
+        // Format : LFEQ|classe|date|couleur(index)|nom|total|passages
+        function renderTeamQR(team, nbPassages) {
+            const box = document.getElementById('teamQrBox');
+            if (!box) return;
+            const text = ['LFEQ', qrField(state.className), qrField(state.sessionDate), team.id, qrField(team.name), team.totalScore, nbPassages].join('|');
+            const holder = document.createElement('div');
+            holder.style.cssText = 'width: 240px; height: 240px; padding: 10px; background: white; border-radius: 12px;';
+            box.appendChild(holder);
+            const levels = [QRCode.CorrectLevel.L, QRCode.CorrectLevel.M];
+            for (let i = 0; i < levels.length; i++) {
+                try {
+                    holder.innerHTML = '';
+                    new QRCode(holder, { text: text, width: 220, height: 220, correctLevel: levels[i] });
+                    return;
+                } catch (e) { /* niveau suivant */ }
+            }
+            box.innerHTML = '<span style="color: var(--text-dim);">QR indisponible : annoncez les chiffres.</span>';
         }
         
         function checkTeamBadges(team, results) {
@@ -6112,6 +6164,355 @@
             }
         }
         
+        // ============================================
+        // CLASSEMENT DES ÉQUIPES (tablette enseignant)
+        // Chaque observateur annonce "total" et "passages" de son équipe ;
+        // l'enseignant les saisit ici et choisit total ou moyenne.
+        // ============================================
+        const RANKING_KEY = 'laserfit-class-ranking';
+        let rankingState = null;
+
+        function loadRankingState() {
+            let s = null;
+            try { s = JSON.parse(localStorage.getItem(RANKING_KEY) || 'null'); } catch (e) { s = null; }
+            if (!s || !Array.isArray(s.rows)) s = { mode: 'total', rows: [] };
+            if (s.mode !== 'avg') s.mode = 'total';
+            s.rows = s.rows.filter(r => r && TEAM_COLORS[r.c]);
+            if (s.rows.length === 0) s.rows = [0, 1, 2, 3].map(c => ({ c: c, total: '', n: '' }));
+            return s;
+        }
+
+        function saveRankingState() {
+            try { localStorage.setItem(RANKING_KEY, JSON.stringify(rankingState)); } catch (e) { /* stockage indisponible */ }
+        }
+
+        function rankingFmt(v) {
+            return (Math.round(v * 10) / 10).toString().replace('.', ',');
+        }
+
+        function openClassRanking() {
+            const old = document.getElementById('rankingModal');
+            if (old) old.remove();
+            rankingState = loadRankingState();
+
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.id = 'rankingModal';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 640px;">
+                    <div class="modal-header">
+                        <h2>🏁 Classement des équipes</h2>
+                        <button class="close-btn" aria-label="Fermer" onclick="document.getElementById('rankingModal').remove()">✕</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="rankingModeBar"></div>
+                        <div id="rankingRows"></div>
+                        <button class="btn btn-primary btn-full" onclick="startRankingScan()" style="margin-bottom: 12px;">
+                            <span>📷 Scanner les QR des équipes</span>
+                        </button>
+                        <button class="btn btn-secondary btn-full" id="rankingAddBtn" onclick="rankingAddRow()" style="margin-bottom: 20px;">
+                            <span>+ Ajouter une équipe</span>
+                        </button>
+                        <div id="rankingResult"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary btn-full" onclick="rankingClear()">
+                            <span>🗑️ Effacer les scores</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            renderRankingAll();
+        }
+
+        function renderRankingAll() {
+            const s = rankingState;
+            const btnStyle = (active) => `flex: 1; min-height: 48px; padding: 10px; border-radius: 10px; cursor: pointer; font-size: 1rem; font-weight: 700; color: var(--text); background: ${active ? 'rgba(0, 255, 204, 0.25)' : 'rgba(255, 255, 255, 0.05)'}; border: 3px solid ${active ? 'var(--secondary)' : 'rgba(255, 255, 255, 0.15)'};`;
+
+            document.getElementById('rankingModeBar').innerHTML = `
+                <div style="margin-bottom: 8px; font-weight: 700;">Mode de calcul</div>
+                <div style="display: flex; gap: 10px;">
+                    <button style="${btnStyle(s.mode === 'total')}" onclick="rankingSetMode('total')">Total des points</button>
+                    <button style="${btnStyle(s.mode === 'avg')}" onclick="rankingSetMode('avg')">Moyenne par passage</button>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-dim); margin: 8px 0 20px 0; line-height: 1.4;">
+                    ${s.mode === 'total'
+                        ? 'Somme des points de l\'équipe. Adapté si toutes les équipes ont le même nombre de passages.'
+                        : 'Total ÷ nombre de passages. Équitable si les équipes n\'ont pas le même nombre de passages.'}
+                </p>
+            `;
+
+            const inputStyle = 'min-height: 48px; padding: 8px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; color: var(--text); font-size: 1.1rem; width: 100%; box-sizing: border-box;';
+            let rowsHTML = `
+                <div style="display: flex; gap: 8px; margin-bottom: 4px; font-size: 0.8rem; color: var(--text-dim);">
+                    <span style="flex: 2;">Équipe</span><span style="flex: 1;">Total (pts)</span><span style="flex: 1;">Passages</span><span style="width: 48px;"></span>
+                </div>`;
+            s.rows.forEach((r, i) => {
+                const opts = TEAM_COLORS.map((c, ci) => `<option value="${ci}"${ci === Number(r.c) ? ' selected' : ''}>${c.emoji} ${c.name}</option>`).join('');
+                rowsHTML += `
+                    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px;">
+                        <select aria-label="Couleur de l'équipe" onchange="rankingSet(${i}, 'c', this.value)" style="${inputStyle} flex: 2; width: auto; min-width: 0;">${opts}</select>
+                        <input type="number" inputmode="numeric" min="0" aria-label="Score total" placeholder="ex : 412" value="${esc(r.total)}" oninput="rankingSet(${i}, 'total', this.value)" style="${inputStyle} flex: 1; width: auto; min-width: 0;">
+                        <input type="number" inputmode="numeric" min="1" aria-label="Nombre de passages" placeholder="ex : 6" value="${esc(r.n)}" oninput="rankingSet(${i}, 'n', this.value)" style="${inputStyle} flex: 1; width: auto; min-width: 0;">
+                        <button aria-label="Retirer cette équipe" onclick="rankingRemoveRow(${i})" style="width: 48px; min-height: 48px; flex-shrink: 0; background: var(--danger); border: none; color: white; border-radius: 8px; cursor: pointer; font-size: 1.1rem;">✕</button>
+                    </div>`;
+            });
+            document.getElementById('rankingRows').innerHTML = rowsHTML;
+
+            const addBtn = document.getElementById('rankingAddBtn');
+            if (addBtn) addBtn.style.display = s.rows.length >= TEAM_COLORS.length ? 'none' : '';
+
+            renderRankingResult();
+        }
+
+        function renderRankingResult() {
+            const s = rankingState;
+            const el = document.getElementById('rankingResult');
+            if (!el) return;
+
+            const items = [];
+            const missing = [];
+            s.rows.forEach(r => {
+                const color = TEAM_COLORS[r.c];
+                const total = parseFloat(r.total);
+                const n = parseInt(r.n, 10);
+                if (isNaN(total) || total < 0) return;
+                const hasN = n > 0;
+                if (s.mode === 'avg' && !hasN) { missing.push(color); return; }
+                const avg = hasN ? total / n : null;
+                items.push({ color: color, name: r.name || color.name, cls: r.cls || '', total: total, n: hasN ? n : 0, avg: avg, value: s.mode === 'avg' ? avg : total });
+            });
+
+            items.sort((a, b) => b.value - a.value);
+
+            // Rang : les ex aequo (à 0,1 pt près) partagent la même place
+            let html = '';
+            let rank = 0;
+            let prevKey = null;
+            const medals = ['🥇', '🥈', '🥉'];
+            items.forEach((it, idx) => {
+                const key = Math.round(it.value * 10);
+                if (key !== prevKey) { rank = idx + 1; prevKey = key; }
+                const medal = rank <= 3 ? medals[rank - 1] : rank + 'e';
+                const mainNum = s.mode === 'avg' ? rankingFmt(it.avg) : rankingFmt(it.total);
+                const mainUnit = s.mode === 'avg' ? 'pts / passage' : 'pts';
+                const detail = s.mode === 'avg'
+                    ? rankingFmt(it.total) + ' pts sur ' + it.n + ' passage' + (it.n > 1 ? 's' : '')
+                    : (it.n > 0 ? it.n + ' passage' + (it.n > 1 ? 's' : '') + ' • moyenne ' + rankingFmt(it.avg) + ' pts' : '');
+                html += `
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 14px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.05); border-left: 6px solid ${it.color.border}; border-radius: 10px;">
+                        <div style="font-size: 1.6rem; min-width: 40px; text-align: center;">${medal}</div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 1.2rem; font-weight: 700;">${it.color.emoji} Équipe ${esc(it.name)}</div>
+                            <div style="font-size: 0.85rem; color: var(--text-dim);">${detail}</div>
+                        </div>
+                        <div style="text-align: right; flex-shrink: 0;">
+                            <div style="font-size: 1.9rem; font-weight: 900; line-height: 1.1; color: var(--secondary);">${mainNum}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-dim);">${mainUnit}</div>
+                        </div>
+                    </div>`;
+            });
+
+            if (items.length === 0) {
+                html = '<p style="text-align: center; color: var(--text-dim);">Saisissez le total (et les passages) annoncés par chaque observateur.</p>';
+            }
+
+            if (missing.length > 0) {
+                html += `<p style="color: var(--tertiary); font-size: 0.9rem;">⚠️ Nombre de passages manquant : ${missing.map(c => c.emoji + ' ' + c.name).join(', ')}</p>`;
+            }
+
+            const classes = {};
+            items.forEach(it => { if (it.cls) classes[it.cls] = true; });
+            if (Object.keys(classes).length > 1) {
+                html += '<p style="color: var(--tertiary); font-size: 0.9rem;">⚠️ Classes différentes parmi les scores scannés : ' + Object.keys(classes).map(esc).join(', ') + '.</p>';
+            }
+
+            if (s.mode === 'total') {
+                const counts = {};
+                items.forEach(it => { if (it.n > 0) counts[it.n] = true; });
+                if (Object.keys(counts).length > 1) {
+                    html += '<p style="color: var(--tertiary); font-size: 0.9rem;">⚠️ Les équipes n\'ont pas le même nombre de passages : la <strong>moyenne par passage</strong> est plus équitable.</p>';
+                }
+            }
+
+            el.innerHTML = html;
+        }
+
+        // --- Scan des QR d'équipes (caméra) ---
+        let scanStream = null;
+
+        function parseTeamQR(text) {
+            const p = String(text || '').split('|');
+            if (p.length !== 7 || p[0] !== 'LFEQ') return null;
+            const c = parseInt(p[3], 10), total = parseFloat(p[5]), n = parseInt(p[6], 10);
+            if (!TEAM_COLORS[c] || isNaN(total) || total < 0 || isNaN(n) || n < 1) return null;
+            return { cls: p[1], date: p[2], c: c, name: p[4], total: total, n: n };
+        }
+
+        function applyScannedTeam(t) {
+            const rows = rankingState.rows;
+            let row = rows.find(r => Number(r.c) === t.c);
+            if (!row) {
+                row = rows.find(r => r.total === '' && r.n === '');
+                if (row) {
+                    row.c = t.c;
+                } else if (rows.length < TEAM_COLORS.length) {
+                    row = { c: t.c, total: '', n: '' };
+                    rows.push(row);
+                } else {
+                    return false;
+                }
+            }
+            const changed = row.total !== '' && (row.total !== String(t.total) || row.n !== String(t.n));
+            const previous = row.total;
+            row.total = String(t.total);
+            row.n = String(t.n);
+            row.name = t.name && t.name !== TEAM_COLORS[t.c].name ? t.name : '';
+            row.cls = t.cls || '';
+            saveRankingState();
+            renderRankingAll();
+            return changed ? { replaced: previous } : { replaced: null };
+        }
+
+        function stopScanStream() {
+            if (scanStream) {
+                try { scanStream.getTracks().forEach(tr => tr.stop()); } catch (e) { /* déjà arrêté */ }
+                scanStream = null;
+            }
+        }
+
+        function closeRankingScan() {
+            stopScanStream();
+            const m = document.getElementById('scanModal');
+            if (m) m.remove();
+            if (document.getElementById('rankingModal')) renderRankingAll();
+        }
+
+        async function startRankingScan() {
+            if (document.getElementById('scanModal')) return;
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof jsQR === 'undefined') {
+                alert('Le scan n\'est pas disponible sur cet appareil. Saisissez les scores à la main.');
+                return;
+            }
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.id = 'scanModal';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 560px;">
+                    <div class="modal-header">
+                        <h2>📷 Scanner</h2>
+                        <button class="close-btn" aria-label="Fermer" onclick="closeRankingScan()">✕</button>
+                    </div>
+                    <div class="modal-body" style="text-align: center;">
+                        <video id="scanVideo" playsinline muted autoplay style="width: 100%; max-height: 50vh; background: #000; border-radius: 12px;"></video>
+                        <canvas id="scanCanvas" style="display: none;"></canvas>
+                        <p id="scanStatus" role="status" style="margin-top: 12px; font-weight: 700;">Présentez le QR d'une équipe devant la caméra.</p>
+                        <div id="scanList" style="text-align: left;"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary btn-full" onclick="closeRankingScan()"><span>✅ Terminer</span></button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            const status = document.getElementById('scanStatus');
+            const video = document.getElementById('scanVideo');
+            const canvas = document.getElementById('scanCanvas');
+            try {
+                scanStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: { ideal: 'environment' }, width: { ideal: 640 }, height: { ideal: 480 } },
+                    audio: false
+                });
+                video.srcObject = scanStream;
+                await video.play();
+            } catch (e) {
+                stopScanStream();
+                status.style.color = 'var(--danger)';
+                status.textContent = 'Caméra indisponible ou refusée. Saisissez les scores à la main.';
+                return;
+            }
+
+            const ctx = canvas.getContext('2d');
+            let lastText = '';
+            let lastTime = 0;
+            const done = {};
+            const tick = function () {
+                // Fenêtre fermée (croix, bouton Retour) : on libère la caméra
+                if (!document.getElementById('scanModal')) { stopScanStream(); return; }
+                if (video.readyState >= 2 && video.videoWidth > 0) {
+                    const w = Math.min(video.videoWidth, 480);
+                    const h = Math.round(video.videoHeight * w / video.videoWidth);
+                    canvas.width = w;
+                    canvas.height = h;
+                    ctx.drawImage(video, 0, 0, w, h);
+                    let code = null;
+                    try { code = jsQR(ctx.getImageData(0, 0, w, h).data, w, h, { inversionAttempts: 'dontInvert' }); } catch (e) { code = null; }
+                    const now = Date.now();
+                    if (code && code.data && (code.data !== lastText || now - lastTime > 2500)) {
+                        lastText = code.data;
+                        lastTime = now;
+                        const t = parseTeamQR(code.data);
+                        let res = null;
+                        if (!t) {
+                            status.style.color = 'var(--tertiary)';
+                            status.textContent = '⚠️ Ce QR n\'est pas un QR d\'équipe LaserFit.';
+                        } else if (res = applyScannedTeam(t)) {
+                            const col = TEAM_COLORS[t.c];
+                            status.style.color = res.replaced !== null ? 'var(--tertiary)' : 'var(--success)';
+                            status.textContent = (res.replaced !== null ? '⚠️ Remplace l\'ancien score (' + res.replaced + ' pts) de cette couleur : ' : '✅ ')
+                                + col.emoji + ' ' + t.name + ' : ' + t.total + ' pts sur ' + t.n + ' passage' + (t.n > 1 ? 's' : '');
+                            done[t.c] = col.emoji + ' ' + t.name + ' : ' + t.total + ' pts / ' + t.n;
+                            document.getElementById('scanList').innerHTML = Object.keys(done).map(k => '<div style="padding: 6px 0;">' + esc(done[k]) + '</div>').join('');
+                            try { if (navigator.vibrate) navigator.vibrate(120); } catch (e) { /* sans vibreur */ }
+                        } else {
+                            status.style.color = 'var(--tertiary)';
+                            status.textContent = '⚠️ Plus de place : retirez une équipe.';
+                        }
+                    }
+                }
+                setTimeout(tick, 200);
+            };
+            tick();
+        }
+
+        function rankingSet(i, field, value) {
+            if (!rankingState || !rankingState.rows[i]) return;
+            rankingState.rows[i][field] = field === 'c' ? Number(value) : value;
+            if (field === 'c') { rankingState.rows[i].name = ''; rankingState.rows[i].cls = ''; }
+            saveRankingState();
+            renderRankingResult();
+        }
+
+        function rankingSetMode(mode) {
+            rankingState.mode = mode === 'avg' ? 'avg' : 'total';
+            saveRankingState();
+            renderRankingAll();
+        }
+
+        function rankingAddRow() {
+            const used = rankingState.rows.map(r => Number(r.c));
+            let c = TEAM_COLORS.findIndex((_, idx) => used.indexOf(idx) === -1);
+            if (c === -1) return;
+            rankingState.rows.push({ c: c, total: '', n: '' });
+            saveRankingState();
+            renderRankingAll();
+        }
+
+        function rankingRemoveRow(i) {
+            rankingState.rows.splice(i, 1);
+            saveRankingState();
+            renderRankingAll();
+        }
+
+        function rankingClear() {
+            if (!confirm('Effacer tous les scores saisis ?')) return;
+            rankingState.rows = [0, 1, 2, 3].map(c => ({ c: c, total: '', n: '' }));
+            saveRankingState();
+            renderRankingAll();
+        }
+
         function finishTeamMatch() {
             document.querySelector('.modal')?.remove();
             resetApp();
@@ -7063,6 +7464,8 @@
                 <ul>
                     <li><strong>Mode Solo :</strong> un pratiquant réalise un circuit d'exercices de fitness alternés avec des tirs de précision laser. Un observateur/coach compte les répétitions.</li>
                     <li><strong>Mode Équipe :</strong> plusieurs équipes s'affrontent en relais. Chaque coureur enchaîne exercices et tirs, puis passe au suivant.</li>
+                    <li><strong>Plusieurs tablettes, une équipe par tablette :</strong> choisissez « 1 » équipe sur chaque tablette. À la fin, la tablette affiche en grand le total et la moyenne de l'équipe : l'observateur les annonce.</li>
+                    <li><strong>Classement des équipes :</strong> sur la tablette de l'enseignant, bouton « Classement des équipes » à l'écran d'accueil. Scannez le QR affiché en fin de relais sur chaque tablette d'équipe (bouton « Scanner »), ou saisissez le total et le nombre de passages à la main. Chaque tablette doit avoir une couleur différente (jusqu'à 8 équipes). Choisissez ensuite le calcul : total des points ou moyenne par passage (équitable si les équipes n'ont pas le même nombre de passages).</li>
                     <li><strong>Exercices :</strong> 14 exercices proposés (jumping jacks, 1/2 burpees, 1/2 squats, pompes inclinées, planches militaires, step ups, etc.), classés par ordre alphabétique. Le professeur peut en ajouter ou en masquer. Les barèmes s'adaptent à la durée choisie.</li>
                     <li><strong>Tirs laser :</strong> tirs à 3 m, 5 m ou 8 m. Le coach valide chaque tir réussi, les points par tir sont réglables par le professeur.</li>
                     <li><strong>Résultats :</strong> score total, détail par exercice, badges de performance, graphique de progression des tirs.</li>
