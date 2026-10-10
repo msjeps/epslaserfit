@@ -40,11 +40,11 @@
         /* Mode clair : surcharge uniquement le texte */
         body.light-mode {
             --text: #1a1a2e;
-            --text-dim: #666666;
+            --text-dim: #444444;
         }
         
         body {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--bg-dark);
             color: var(--text);
             min-height: 100vh;
@@ -108,7 +108,6 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
             z-index: 1000;
             display: flex;
             align-items: center;
@@ -153,9 +152,7 @@
         .modal-header h2 {
             margin: 0;
             font-size: 1.5rem;
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--secondary);
         }
         
         .close-btn {
@@ -265,16 +262,72 @@
             font-family: 'Courier New', Courier, monospace;
             font-size: 3rem;
             font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--primary);
             position: relative;
             z-index: 1;
             letter-spacing: 3px;
             text-transform: uppercase;
         }
         
+        /* Accessibilité : texte réservé aux lecteurs d'écran, focus clavier visible */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        button:focus-visible,
+        [role="button"]:focus-visible,
+        .modal-content:focus-visible {
+            outline: 3px solid var(--secondary);
+            outline-offset: 2px;
+        }
+        .modal-content:focus { outline: none; }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Version affichée sous le titre (= versionName du module Gradle) */
+        .version-app {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-top: 6px;
+            position: relative;
+            z-index: 1;
+            font-weight: 600;
+        }
+
+        /* Pied de page outils-eps (charte DESIGN-SYSTEM-EPS) */
+        .pied-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(128, 128, 128, 0.3);
+        }
+        .pied-page-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .pied-page p {
+            font-size: 0.85em;
+            opacity: 0.7;
+            margin: 0;
+        }
+
         .subtitle {
             font-size: 1.1rem;
             color: var(--text-dim);
@@ -330,7 +383,7 @@
             border-radius: 10px;
             color: var(--text);
             font-size: 1rem;
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             transition: all 0.3s ease;
         }
         
@@ -470,7 +523,7 @@
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             position: relative;
             overflow: hidden;
         }
@@ -481,7 +534,7 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), #cc0052);
+            background: var(--primary);
             color: white;
             box-shadow: 0 4px 20px rgba(255, 0, 102, 0.3);
         }
@@ -492,7 +545,7 @@
         }
         
         .btn-secondary {
-            background: linear-gradient(135deg, var(--secondary), #00cc99);
+            background: var(--secondary);
             color: var(--bg-dark);
             box-shadow: 0 4px 20px rgba(0, 255, 204, 0.3);
         }
@@ -529,7 +582,7 @@
             width: 100%;
             max-width: 500px;
             height: 80px;
-            background: linear-gradient(135deg, #FF006E 0%, #FF6B00 100%);
+            background: #FF006E;
             border: none;
             border-radius: 15px;
             color: white;
@@ -580,7 +633,7 @@
             height: 200px;
             border-radius: 50%;
             border: none;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--primary);
             box-shadow: 0 8px 30px rgba(255, 0, 102, 0.4);
             cursor: pointer;
             transition: all 0.3s ease;
@@ -639,7 +692,7 @@
         }
         
         .circular-start-text {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-size: 3rem !important;
             font-weight: 900;
             color: white;
@@ -649,7 +702,7 @@
         }
         
         .circular-start-countdown {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 5rem;
             font-weight: 900;
             color: white;
@@ -658,7 +711,7 @@
         }
         
         .circular-start-countdown-label {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-size: 1.2rem;
             color: rgba(255, 255, 255, 0.9);
             margin-top: 10px;
@@ -668,7 +721,7 @@
         
         /* Chronomètre intégré dans le bouton rond */
         .circular-start-timer {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 3rem;
             font-weight: 900;
             color: white;
@@ -678,7 +731,7 @@
         }
         
         .circular-start-round {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-size: 1rem;
             color: rgba(255, 255, 255, 0.8);
             letter-spacing: 1px;
@@ -708,7 +761,7 @@
         }
         
         .total-timer-display {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 2.5rem;
             font-weight: 900;
             color: var(--secondary);
@@ -746,7 +799,7 @@
         }
         
         .recap-value {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 1.3rem;
             font-weight: 700;
             color: var(--secondary);
@@ -778,7 +831,7 @@
         }
         
         .sequence-number {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 1.2rem;
             font-weight: 900;
             color: var(--text-dim);
@@ -857,7 +910,7 @@
         }
         
         .timer-display-circle {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 2.5rem;
             font-weight: 900;
             color: var(--secondary);
@@ -903,13 +956,10 @@
         }
         
         .timer-display {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 8rem;
             font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--primary);
             margin: 40px 0;
             animation: timerPulse 1s ease-in-out infinite;
         }
@@ -920,10 +970,7 @@
         }
         
         .timer-display.warning {
-            background: linear-gradient(135deg, var(--warning), var(--danger));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--danger);
             animation: timerWarning 0.5s ease-in-out infinite;
         }
         
@@ -949,7 +996,7 @@
         }
         
         .counter-display {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 5rem;
             font-weight: 900;
             color: var(--secondary);
@@ -995,13 +1042,10 @@
         }
         
         .points-value {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 2.5rem;
             font-weight: 900;
-            background: linear-gradient(135deg, var(--secondary), var(--tertiary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--secondary);
         }
         
         /* Version petite pour affichage en bas */
@@ -1020,7 +1064,7 @@
         }
         
         .points-value-small {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 1.1rem;
             font-weight: 700;
             color: var(--secondary);
@@ -1110,7 +1154,7 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--primary);
             border: 2px solid var(--secondary);
             color: white;
             font-size: 1.5rem;
@@ -1264,7 +1308,6 @@
         /* Results */
         .total-score {
             background: #ff0066;
-            background: linear-gradient(135deg, #ff0066 0%, #00ffcc 100%);
             padding: 50px;
             border-radius: 20px;
             margin-bottom: 30px;
@@ -1507,7 +1550,7 @@
         
         .podium-block {
             width: 120px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--primary);
             border-radius: 10px 10px 0 0;
             display: flex;
             align-items: center;
@@ -1555,7 +1598,50 @@
             color: var(--text); text-align: center; letter-spacing: 3px; margin: 15px 0;
         }
         .admin-panel-section { display: none; }
-        .admin-bareme-group { margin-bottom: 20px; }
+        .admin-bareme-group { margin-bottom: 8px; }
+        .admin-acc-head {
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+            width: 100%; min-height: 48px; padding: 10px 14px; text-align: left; cursor: pointer;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px; color: var(--text); font-size: 1rem; font-weight: 700;
+        }
+        .admin-bareme-group.open > .admin-acc-head { border-color: var(--secondary); color: var(--secondary); }
+        .admin-acc-title { flex: 1; }
+        .admin-acc-badge {
+            font-size: 0.75rem; font-weight: 600; padding: 2px 8px; margin-left: 8px;
+            border-radius: 10px; border: 1px solid var(--text-dim); color: var(--text-dim);
+        }
+        .admin-acc-chevron { font-size: 0.9rem; }
+        .admin-acc-body { display: none; padding: 12px 6px 4px; }
+        .admin-bareme-group.open > .admin-acc-body { display: block; }
+        .admin-ex-toolbar {
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+            gap: 8px 12px; margin-bottom: 10px; padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .admin-ex-tools { font-size: 0.85rem; color: var(--text-dim); font-weight: 400;
+            display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+        .admin-ex-tools input { width: 22px; height: 22px; }
+        .admin-ex-del {
+            min-height: 44px; padding: 6px 12px; background: transparent; color: var(--danger);
+            border: 2px solid var(--danger); border-radius: 10px; font-size: 0.85rem; font-weight: 700; cursor: pointer;
+        }
+        .admin-new-ex input[type="text"], .admin-new-ex input[type="number"] {
+            width: 100%; padding: 10px 12px; min-height: 44px; font-size: 1rem;
+            border: 2px solid rgba(255,255,255,0.15); border-radius: 10px;
+            background: rgba(255,255,255,0.05); color: var(--text);
+        }
+        .admin-new-ex label { display: block; margin: 12px 0 4px; font-size: 0.9rem; color: var(--text-dim); }
+        .admin-new-row {
+            display: grid; grid-template-columns: 1fr 80px 80px 44px; gap: 8px;
+            align-items: center; margin-bottom: 6px;
+        }
+        .admin-new-row span { font-size: 0.85rem; color: var(--text-dim); }
+        .admin-new-row button {
+            min-height: 44px; background: transparent; border: 2px solid var(--danger);
+            color: var(--danger); border-radius: 10px; font-weight: 700; cursor: pointer;
+        }
+        #adminNewExError { color: var(--danger); font-weight: 600; margin-top: 10px; display: none; }
         .admin-bareme-group h4 {
             font-size: 1rem; color: var(--secondary); margin-bottom: 10px;
             padding-bottom: 5px; border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -1589,7 +1675,7 @@
         .btn-admin-reset:hover { background: var(--danger); color: white; }
         .btn-admin-save {
             width: 100%; padding: 14px; margin-top: 10px;
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            background: var(--secondary);
             border: none; color: #0a0a0a; border-radius: 10px; font-weight: 700;
             font-size: 1rem; cursor: pointer; transition: all 0.3s ease;
         }
@@ -1698,6 +1784,7 @@
     <div class="container">
         <div class="header">
             <h1>⚡ Laser Fit ⚡</h1>
+            <p class="version-app">Version 2.1</p>
             <div class="subtitle">Fitness + Tir Laser de Précision</div>
             <button class="settings-btn" onclick="openSettings()" title="Réglages">
                 <span>⚙️</span>
@@ -1758,7 +1845,7 @@
             <div class="card">
                 <div class="logo-container" style="text-align: center; margin-bottom: 30px;">
                     <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABkAGQDASIAAhEBAxEB/8QAHAABAAIDAQEBAAAAAAAAAAAAAAUGAwQHAgEI/8QANRAAAQMDAgQFAwMEAQUAAAAAAQIDBAAFEQYhEjFBYQcTIjJRFHGBI0KRCBUkUjNDYoKh4f/EABoBAAIDAQEAAAAAAAAAAAAAAAAEAQIDBQf/xAArEQABAwMDAwMEAwEAAAAAAAABAAIRAxIhBDFBUXGRE2HwIoGxwaHR4fH/2gAMAwEAAhEDEQA/AK1SlK9AXlSUpShCUpShCUpQkAZOwoQlKi7fcA/erhGMltaGvK8pII2ykk9zvUpVWuDhIV3sLDBSlBucCvTiFtuKbcSpC0khSVDBB+DVlReaUpQhKUqU0rZpGoL9FtUYhKnlepZ5ISBlSvwAahzg0SVIBJgKd8LtIRtWXCWiZLcYYioSpQaxxrKicYyCANjnb4qM15YUab1NItTcgvtoCVoWfdhQzg967BovR2lo7sp+xzrkp+M6qK7ITIKfWACpIwACNx0Iz9qqerfD6MHrhfH9XMmGQopdkHzHVujILZIIBORjbfpjauczWA1jLsdITrtMRSEDPWVy2lKjtRz3LdaXX2EBclZS1HQf3OrISkfbJyewNdBzg0ElJsYXuDRuVguVzlOTlWuzNtuy0gF95zPlRgeXFj3KPRI+5wK8J01DfAXeHn7s7zJkq/TB7NjCAPwT3ratcSNYrMUuPeltKnpMhfNaua1qPfc1GRWblqFAmSpMm225e8eMwry3XE9FOLG4z/qnGOppciYvEk8cD518JtpgH0za0c8n9/bbqscLT1hdvV1Ycs1vLaPJ4E/ToATlJzjbb8VM2jRt8ly/I0auSp5KSow3lF2OQPkqOW/uDjsamPB3wjsWq9RXh1+fKiMQVsgojzXRIVxIzkqz7Tvuc8jsOddAk3xXhn4lwVKtEiBo6+BMNDrqiVIkI2ClJOVJB2IJ3PqyNxSJrsbLbRdnbv8AZOFj3EEOJbAwew4kqR8C4mkX7dCnyXGzqNxS0OQpKk+ZFdR7kpR123C+oIIxnFU7xWbmN68uRmx2WVrWFI8pJCVox6VdyRz75r5/URYXtJ6oheI1gJa4F+ctbPVOQXE99v1B3CulevEDWLerzb3029thbDGFvBWS4TgnH/aDnHXer6S91W+ZkePmyw1QYKcARn5/aqtKUrqrmpWSM+/GeS9HecZdT7VtqKVD7EVjpQhdt8CLow1pC5tyAWW4T5fdeV7SlSck/ccBz+KpfiTpOLZ4ES9266uXCJPdUeJYHMjiyCNjnB6dKm9Ltpa8HVw4rzf1t7uAioHFuCpSUEH/AMUk/mpO46VlXHTkTRY1JZXH7esupbT/AM5wFYBTxbD1/HxXIDxTrufMAnPYc+V0S0vpBsTj5/C4s8vymVucC18CSrhQMqOOgHzVUvt28672NtVsuQQmWt0pUxgrKWl4xvvgnP4q3lCgsoKTxA4I65qwaH0JE1fqmKxcp7kBdrd+pLARh18FKkKQM+0YWCTue3UPaowy6cCPysNIW3wR1/BVLj2m8a6lxdOWizz/APIkNGU4+1wNtsJUFLKlZ2GBjvnAznFdbvHhcmNYZc23X5ifKghRkMIQAAUjKk5CiQoDoRv2qQ1gtzQmpbderLY1Qrc2DEdT5g/y0g5O2diRnClHJI3GBvcLrc9OWu2/3n6JS7VfyBMlskjh4kYSVJG4BGc4wQe5rnv1FUPD2nftxwmxTpllhER355X598NdbLsmvZRYt8ptMXgRKWpGESW1cwD1I5j7VZv6rpFln2NqdCnvTJL8IqDLILgZAHG26eiN8ZGxOxxsaqt1mW17VV1iWZt5NujKQGFPKytQUnJJ+Bnl1xzqu6rf+sQNOQ1cUqcOF4p/6DB961fGRlI+Se1MVKQe31ZzkbbzwqUqhbUDIxg77Rmf2tuTqude7JEj3KJeZLKYobbQWcoQkp3Cd+W/8YqM0VeFu6dtLTkCepXkNtl0M+g4ATxZzy2zmpXUExNqsEmQ2nCm2uBlA6rPpQkfckCstihf22ywoGxMdhDZI6kAAn+a3axwqAA7Dp1/4Vk6ow0ibdzjPQf6Fu0pSmkklKUoQlbMGBNnB4w4j8gMoLjpbQVcCR1OOQrbumn7xbLXFuU+C7HjSlFLRWME4GdxzGRyzzwa6x4D3FKtJ3GIxHbclxHS5wJwlToUnKQT85SoZPLalq+o9One3K3o0b32uwoLwBh25+53GS8hl24MNoMVDnQHPEofnhGeme9S+sNO3WLIe15FukNd1gqC5DEZvDYCQApOckkhJ3zjI+K8eJ2j7fb0HVlsWzCcZWlciItfAl0ncpTwnZR6gc+neu6t8QoszTytP6dtAtkJ0YdUccShzIAHyeZJJNIi6tUFWnscH26hNG2kyx/GysusvEfQEe1wbjcW2ZdyucZUdiMvJ4M54kKV7W8kkZ2KsbZxXEr81Lu0OLFVd7nFbhlRjJYkEJb4jk+g5Scn5FepkaPMjLjS2G32XBhaHEgg/iodFjnQvTZ72+wyPbHlI+obT2BJCwO3FTLNMKQIi4HyPnVU9cVIN1pHg+PxBCj4Nquj16ujLmopaQPK41tMNIWv0nG/CcfgCpyBAttjhvLb4WUH9R+Q85lSz/statz+ag7ezqZd8uaBPtTS/wBLzHExFq/accILm35JqSRpxDr6X73MkXVxJCkNvAJZSehDadj9zmppDlrc5yT79yVeu4Ew54iBgDfA9gFgh+ZqK5sXFba27TEVxxErGDJc6OkHkkftzzO/xVir0pCkAcSSkEZGRjIr4QQASCAeXemmMtGckpOpUvOBAGy+UpSrrJKyMsuvFXlIK+EZOPitu1W4zApxTzbTSFBJKlYOT+D/ADitq6hMBlMZhxKXf3hPuAI6/FUL8wFYNxJXUNCzomvtDv6Yu7p+tioAS5zUUj2OD5I5H/7UHNudo8ONWuI085/cUqheTJYU77HgoEKKgMZ+QOW/KudW+dMt75fgyXYzpQpHG2opPCRgjIrXpYaQBxz9J4TB1MtGPqHK3LvcpNznyZcghJkPqfU2gkIC1cyASa06UpsAAQEsSSZKUpSpULE1HZbkPSEIw69w+YrJ3wMCr/Ih2jV70B6JfosCeIrMZcWa2pCStCQnKVjIIOOXOqLUrpCI/O1TbI0ZsrcVKbOB0AUCT9gAT+KxqNxcDEStWOJMHMrq3ihZLldbdb3L1KsFmjxMp80PuLK1EDZILYwMJzw7/wDqubawm2xyJabVapLkxm3MLbVJU15YcUtZWcJO4Az1rqvjs0qdoxLsQpeTDmpVI4CD5Y4VJ3+N1J/muEUpoBfTBJ24W+rNryBylKUropNZ4D5jS23t8JO+Pis97eYkXBbkdRWjlxEYzv37YrRpURmVM4hKUpUqEpSlCEpSlCEq+6RnwNJ6PkX9t9h6+T+KPDaCgpUdAOFLUOm4zvz9PyaoVKzqUxUFp2V2PsMhWzw91OLPeHmboTItdyBanIX6shWfX3Iyc/IJ7VEastse06glwYctqXGQrLLrawoKQRkbjqAcHuKiqUCmA+4coLyW2lKUpWiolKUoQlKUoQlKUoQlKUoQlKUoQlKUoQlKUoQv/9k=" alt="Laser Fit" style="width: 100px; height: 100px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                    <h1 style="margin-top: 20px; font-size: 2.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Laser Fit</h1>
+                    <h1 style="margin-top: 20px; font-size: 2.5rem; color: var(--primary);">Laser Fit</h1>
                     <p style="color: var(--text-dim); margin-top: 10px;">Collège Mont Saint Jean</p>
                 </div>
                 
@@ -1902,20 +1989,20 @@
                     <label>Exercices à exécuter</label>
                     <select id="exerciseSelector">
                         <option value="">-- Choisir un exercice --</option>
-                        <option value="SAUT À LA CORDE">SAUT À LA CORDE</option>
-                        <option value="JUMPING JACK">JUMPING JACK</option>
                         <option value="1/2 BURPEES">1/2 BURPEES</option>
-                        <option value="STEP UP">STEP UP (montée contre-haut)</option>
-                        <option value="POMPES INCLINÉES">POMPES INCLINÉES</option>
+                        <option value="1/2 SQUATS">1/2 SQUATS (flexions jambes)</option>
                         <option value="ALLER RETOURS">ALLER RETOURS (largeur terrain volley)</option>
-                        <option value="SAUTS LATÉRAUX">SAUTS LATÉRAUX</option>
-                        <option value="SAUTS GROUPÉS">SAUTS GROUPÉS (kangourou)</option>
-                        <option value="MONTÉES DE GENOUX">MONTÉES DE GENOUX (skipping)</option>
-                        <option value="SQUATS">SQUATS (flexions jambes)</option>
-                        <option value="MOUNTAIN CLIMBERS">MOUNTAIN CLIMBERS</option>
-                        <option value="PLANCHE MILITAIRE">PLANCHE MILITAIRE (planche commando)</option>
                         <option value="FENTES AVANT">FENTES AVANT</option>
                         <option value="FENTES LATÉRALES">FENTES LATÉRALES</option>
+                        <option value="JUMPING JACK">JUMPING JACK</option>
+                        <option value="MONTÉES DE GENOUX">MONTÉES DE GENOUX (skipping)</option>
+                        <option value="MOUNTAIN CLIMBERS">MOUNTAIN CLIMBERS</option>
+                        <option value="PLANCHES MILITAIRES">PLANCHES MILITAIRES (planche commando)</option>
+                        <option value="POMPES INCLINÉES">POMPES INCLINÉES</option>
+                        <option value="SAUT À LA CORDE">SAUT À LA CORDE</option>
+                        <option value="SAUTS GROUPÉS">SAUTS GROUPÉS (kangourou)</option>
+                        <option value="SAUTS LATÉRAUX">SAUTS LATÉRAUX</option>
+                        <option value="STEP UPS">STEP UPS (montée contre-haut)</option>
                     </select>
                 </div>
                 
@@ -2131,7 +2218,42 @@
         </div>
     </div>
 
+    <!-- Pied de page outils-eps (texte en clair, jamais de lien : la WebView ne gère pas la navigation externe) -->
+    <div class="pied-page">
+        <img src="logo-outils-eps.png" alt="Logo outils-eps.fr" class="pied-page-logo">
+        <p>https://outils-eps.fr par Nathalie Prenois</p>
+    </div>
+
     <script>
+        // ========== UTILITAIRES : échappement HTML / CSV / noms de fichiers ==========
+        // Échappe une valeur saisie par l'utilisateur avant insertion dans innerHTML
+        function esc(v) {
+            return String(v === null || v === undefined ? '' : v)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        // Cellule CSV (séparateur ;) : guillemets si besoin + neutralisation des formules Excel
+        function csvCell(v) {
+            let s = String(v === null || v === undefined ? '' : v);
+            if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+            if (/[;"\n\r]/.test(s)) s = '"' + s.replace(/"/g, '""') + '"';
+            return s;
+        }
+
+        // Champ du payload QR (séparateurs ; | et retours ligne interdits)
+        function qrField(v) {
+            return String(v === null || v === undefined ? '' : v).replace(/[;|\r\n]+/g, ' ').trim();
+        }
+
+        // Nom de fichier sûr (ASCII, sans séparateur de chemin)
+        function safeFileName(s, fallback) {
+            const clean = String(s === null || s === undefined ? '' : s)
+                .normalize('NFD').replace(/[̀-ͯ]/g, '')
+                .replace(/[^A-Za-z0-9._-]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 40);
+            return clean || fallback || 'sans_nom';
+        }
+
         // Barèmes
         let EXERCISE_THRESHOLDS = {
             'JUMPING JACK': [
@@ -2158,7 +2280,7 @@
                 { min: 70, max: 89, points: 40 },
                 { min: 90, max: Infinity, points: 50 }
             ],
-            'STEP UP': [
+            'STEP UPS': [
                 { min: 0, max: 9, points: 0 },
                 { min: 10, max: 14, points: 10 },
                 { min: 15, max: 19, points: 20 },
@@ -2208,7 +2330,7 @@
                 { min: 40, max: 49, points: 30 },
                 { min: 50, max: Infinity, points: 50 }
             ],
-            'SQUATS': [
+            '1/2 SQUATS': [
                 { min: 0, max: 9, points: 0 },
                 { min: 10, max: 14, points: 10 },
                 { min: 15, max: 19, points: 15 },
@@ -2227,7 +2349,7 @@
                 { min: 50, max: Infinity, points: 50 }
             ]
 ,
-            'PLANCHE MILITAIRE': [
+            'PLANCHES MILITAIRES': [
                 { min: 0, max: 2, points: 0 },
                 { min: 3, max: 6, points: 10 },
                 { min: 7, max: 9, points: 15 },
@@ -2272,15 +2394,34 @@
         const MAX_OBSERVATIONS = 5;
         let pendingRows = [];
 
+        // Exercices renommés : anciens noms -> nouveaux (barèmes enregistrés, séances sauvegardées)
+        const EXERCISE_RENAMES = {
+            'SQUATS': '1/2 SQUATS',
+            'STEP UP': 'STEP UPS',
+            'PLANCHE MILITAIRE': 'PLANCHES MILITAIRES'
+        };
+        function renameExercise(name) {
+            if (typeof name !== 'string') return name;
+            const keys = Object.keys(EXERCISE_RENAMES);
+            for (let i = 0; i < keys.length; i++) {
+                // nom exact ("SQUATS") ou suivi d'un libellé ("SQUATS (Exercice 1)")
+                if (name === keys[i] || name.indexOf(keys[i] + ' (') === 0) {
+                    return EXERCISE_RENAMES[keys[i]] + name.slice(keys[i].length);
+                }
+            }
+            return name;
+        }
+
         // Charger les barèmes personnalisés depuis localStorage
         (function loadCustomBaremes() {
             try {
                 const saved = localStorage.getItem('laserfit-custom-thresholds');
                 if (saved) {
                     const parsed = JSON.parse(saved);
-                    Object.keys(parsed).forEach(key => {
+                    Object.keys(parsed).forEach(oldKey => {
+                        const key = renameExercise(oldKey);
                         if (EXERCISE_THRESHOLDS[key]) {
-                            EXERCISE_THRESHOLDS[key] = parsed[key].map(t => ({
+                            EXERCISE_THRESHOLDS[key] = parsed[oldKey].map(t => ({
                                 min: t.min,
                                 max: t.max === null ? Infinity : t.max,
                                 points: t.points
@@ -2309,37 +2450,185 @@
         function closeAdmin() {
             document.getElementById('adminModal').classList.add('hidden');
         }
+        // --- Mot de passe : jamais en clair, uniquement une empreinte SHA-256 salée ---
+        // Empreinte du mot de passe initial (à changer depuis le panneau). Une empreinte
+        // personnalisée est stockée dans localStorage ; effacer les données de l'app
+        // revient au mot de passe initial.
+        const ADMIN_SALT = 'laserfit-eps|';
+        const ADMIN_DEFAULT_HASH = 'a384d21dc8e33b739a0a236295195c4fa0391a881e3e0922199cee5d03fbb4d3';
+        const ADMIN_HASH_KEY = 'laserfit-admin-hash';
+        // Après ce nombre de mots de passe erronés consécutifs, retour au mot de passe initial
+        const ADMIN_MAX_FAILS = 5;
+        const ADMIN_FAILS_KEY = 'laserfit-admin-fails';
+
+        // SHA-256 en JS pur (synchrone, sans dépendance : crypto.subtle absent hors contexte sécurisé)
+        function sha256Hex(msg) {
+            const K = [
+                0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+                0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+                0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+                0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+                0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+                0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+                0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+                0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+            ];
+            const H = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19];
+            const bytes = [];
+            const utf8 = unescape(encodeURIComponent(msg));
+            for (let i = 0; i < utf8.length; i++) bytes.push(utf8.charCodeAt(i));
+            const bitLen = bytes.length * 8;
+            bytes.push(0x80);
+            while (bytes.length % 64 !== 56) bytes.push(0);
+            for (let i = 7; i >= 0; i--) bytes.push(i >= 4 ? 0 : (bitLen >>> (i * 8)) & 0xff);
+            const rotr = (x, n) => (x >>> n) | (x << (32 - n));
+            const w = new Array(64);
+            for (let off = 0; off < bytes.length; off += 64) {
+                for (let i = 0; i < 16; i++) {
+                    w[i] = (bytes[off + i * 4] << 24) | (bytes[off + i * 4 + 1] << 16) |
+                           (bytes[off + i * 4 + 2] << 8) | bytes[off + i * 4 + 3];
+                }
+                for (let i = 16; i < 64; i++) {
+                    const s0 = rotr(w[i - 15], 7) ^ rotr(w[i - 15], 18) ^ (w[i - 15] >>> 3);
+                    const s1 = rotr(w[i - 2], 17) ^ rotr(w[i - 2], 19) ^ (w[i - 2] >>> 10);
+                    w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
+                }
+                let a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
+                for (let i = 0; i < 64; i++) {
+                    const S1 = rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25);
+                    const ch = (e & f) ^ (~e & g);
+                    const t1 = (h + S1 + ch + K[i] + w[i]) | 0;
+                    const S0 = rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22);
+                    const maj = (a & b) ^ (a & c) ^ (b & c);
+                    const t2 = (S0 + maj) | 0;
+                    h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
+                }
+                H[0] = (H[0] + a) | 0; H[1] = (H[1] + b) | 0; H[2] = (H[2] + c) | 0; H[3] = (H[3] + d) | 0;
+                H[4] = (H[4] + e) | 0; H[5] = (H[5] + f) | 0; H[6] = (H[6] + g) | 0; H[7] = (H[7] + h) | 0;
+            }
+            return H.map(x => ('00000000' + (x >>> 0).toString(16)).slice(-8)).join('');
+        }
+
+        function getAdminHash() {
+            try {
+                const h = localStorage.getItem(ADMIN_HASH_KEY);
+                if (h && /^[0-9a-f]{64}$/.test(h)) return h;
+            } catch (e) { /* localStorage indisponible : mot de passe initial */ }
+            return ADMIN_DEFAULT_HASH;
+        }
+
+        function changeAdminPwd() {
+            const p1 = document.getElementById('adminNewPwd').value || '';
+            const p2 = document.getElementById('adminNewPwd2').value || '';
+            if (p1.length < 6) { alert('Le mot de passe doit contenir au moins 6 caractères.'); return; }
+            if (p1 !== p2) { alert('Les deux saisies ne correspondent pas.'); return; }
+            const h = sha256Hex(ADMIN_SALT + p1);
+            if (h === ADMIN_DEFAULT_HASH) { alert('Choisissez un mot de passe différent du mot de passe initial.'); return; }
+            try {
+                localStorage.setItem(ADMIN_HASH_KEY, h);
+            } catch (e) {
+                alert('Impossible d\'enregistrer le mot de passe sur cette tablette.');
+                return;
+            }
+            document.getElementById('adminNewPwd').value = '';
+            document.getElementById('adminNewPwd2').value = '';
+            document.getElementById('adminDefaultPwdNotice').style.display = 'none';
+            alert('Mot de passe modifié. Notez-le : il n\'est pas récupérable (effacer les données de l\'app rétablit le mot de passe initial).');
+        }
+
         function checkAdminPwd() {
-            const pwd = document.getElementById('adminPwd').value || '';
-            if (pwd === 'ADMINPROF') {
+            const input = document.getElementById('adminPwd');
+            const pwd = input.value || '';
+            const hash = getAdminHash();
+            if (sha256Hex(ADMIN_SALT + pwd) === hash) {
+                input.value = '';
+                try { localStorage.removeItem(ADMIN_FAILS_KEY); } catch (e) { /* ignore */ }
                 document.getElementById('adminLogin').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
+                document.getElementById('adminDefaultPwdNotice').style.display =
+                    (hash === ADMIN_DEFAULT_HASH) ? 'block' : 'none';
                 buildAdminBaremes();
                 buildAdminShooting();
             } else {
-                alert('Mot de passe incorrect');
+                input.value = '';
                 if (navigator.vibrate) navigator.vibrate(200);
+                // Compteur d'échecs persistant (survit au redémarrage de l'app)
+                let fails = 0;
+                try { fails = (parseInt(localStorage.getItem(ADMIN_FAILS_KEY), 10) || 0) + 1; } catch (e) { fails = 1; }
+                if (hash !== ADMIN_DEFAULT_HASH && fails >= ADMIN_MAX_FAILS) {
+                    try {
+                        localStorage.removeItem(ADMIN_HASH_KEY);
+                        localStorage.removeItem(ADMIN_FAILS_KEY);
+                    } catch (e) { /* ignore */ }
+                    alert('Trop d\'erreurs : le mot de passe a été réinitialisé au mot de passe initial.');
+                } else {
+                    try { localStorage.setItem(ADMIN_FAILS_KEY, String(fails)); } catch (e) { /* ignore */ }
+                    alert('Mot de passe incorrect');
+                }
             }
         }
-        function buildAdminBaremes() {
+        // Une fiche par exercice, repliée par défaut ; ouvrir une fiche referme la précédente.
+        function buildAdminBaremes(openName) {
             const container = document.getElementById('adminBaremesContainer');
             container.innerHTML = '';
-            Object.keys(EXERCISE_THRESHOLDS).forEach(exName => {
+            const hidden = getHiddenExercises();
+            sortedExerciseNames().forEach((exName, n) => {
                 const group = document.createElement('div');
-                group.className = 'admin-bareme-group';
-                let html = `<h4>${exName}</h4>`;
+                const isOpen = exName === openName;
+                group.className = 'admin-bareme-group' + (isOpen ? ' open' : '');
+                const attr = esc(exName);
+                const isHidden = hidden.indexOf(exName) >= 0;
+                const bodyId = 'admBody-' + n;
+                let html = `<button type="button" class="admin-acc-head" aria-expanded="${isOpen}" aria-controls="${bodyId}">
+                        <span class="admin-acc-title">${attr}<span class="admin-acc-badge" data-badge-hidden style="${isHidden ? '' : 'display:none'}">masqué</span>${isCustomExercise(exName) ? '<span class="admin-acc-badge">ajouté</span>' : ''}</span>
+                        <span class="admin-acc-chevron" aria-hidden="true">${isOpen ? '▾' : '▸'}</span>
+                    </button>
+                    <div class="admin-acc-body" id="${bodyId}">
+                        <div class="admin-ex-toolbar">
+                            <label class="admin-ex-tools"><input type="checkbox" data-show-ex="${attr}" ${isHidden ? '' : 'checked'}>
+                                Afficher dans le menu</label>
+                            ${isCustomExercise(exName) ? `<button type="button" class="admin-ex-del" data-del-ex="${attr}">🗑 Supprimer</button>` : ''}
+                        </div>`;
                 EXERCISE_THRESHOLDS[exName].forEach((t, i) => {
                     const maxDisplay = t.max === Infinity ? '∞' : t.max;
-                    const maxVal = t.max === Infinity ? '' : t.max;
                     html += `<div class="admin-bareme-row">
                         <label>${t.min}–${maxDisplay} rép. → </label>
                         <input type="number" min="0" max="100" value="${t.points}"
-                            data-ex="${exName}" data-idx="${i}" data-field="points">
+                            data-ex="${attr}" data-idx="${i}" data-field="points">
                     </div>`;
                 });
+                html += '</div>';
                 group.innerHTML = html;
                 container.appendChild(group);
             });
+
+            container.onclick = function (e) {
+                const del = e.target.closest ? e.target.closest('[data-del-ex]') : null;
+                if (del) { deleteCustomExercise(del.getAttribute('data-del-ex')); return; }
+                const head = e.target.closest ? e.target.closest('.admin-acc-head') : null;
+                if (!head) return;
+                const group = head.parentNode;
+                const willOpen = !group.classList.contains('open');
+                container.querySelectorAll('.admin-bareme-group.open').forEach(function (g) {
+                    g.classList.remove('open');
+                    const h = g.querySelector('.admin-acc-head');
+                    h.setAttribute('aria-expanded', 'false');
+                    h.querySelector('.admin-acc-chevron').textContent = '▸';
+                });
+                if (willOpen) {
+                    group.classList.add('open');
+                    head.setAttribute('aria-expanded', 'true');
+                    head.querySelector('.admin-acc-chevron').textContent = '▾';
+                    if (head.scrollIntoView) head.scrollIntoView({ block: 'nearest' });
+                }
+            };
+            // Pastille « masqué » mise à jour en direct
+            container.onchange = function (e) {
+                const cb = e.target;
+                if (!cb.hasAttribute || !cb.hasAttribute('data-show-ex')) return;
+                const badge = cb.closest('.admin-bareme-group').querySelector('[data-badge-hidden]');
+                if (badge) badge.style.display = cb.checked ? 'none' : '';
+            };
         }
         function buildAdminShooting() {
             const container = document.getElementById('adminShootingContainer');
@@ -2369,6 +2658,18 @@
                 const dist = inp.dataset.shootingDist;
                 SHOOTING_POINTS[dist] = parseInt(inp.value) || 0;
             });
+            // Exercices masqués du menu (cases décochées)
+            const hiddenNow = [];
+            let shownCount = 0;
+            document.querySelectorAll('#adminBaremesContainer input[data-show-ex]').forEach(inp => {
+                if (inp.checked) shownCount++; else hiddenNow.push(inp.getAttribute('data-show-ex'));
+            });
+            if (shownCount === 0) {
+                alert('Au moins un exercice doit rester affiché dans le menu.');
+                return;
+            }
+            try { localStorage.setItem(HIDDEN_EX_KEY, JSON.stringify(hiddenNow)); } catch (e) { /* ignore */ }
+
             // Sauvegarder dans localStorage (Infinity → null pour JSON)
             const toSave = {};
             Object.keys(EXERCISE_THRESHOLDS).forEach(key => {
@@ -2380,6 +2681,7 @@
             localStorage.setItem('laserfit-custom-shooting', JSON.stringify(SHOOTING_POINTS));
             // Recalculer les maps normalisées
             rebuildNormalizedMaps();
+            rebuildExerciseSelector();
             alert('Barèmes enregistrés avec succès !');
             closeAdmin();
         }
@@ -2395,6 +2697,8 @@
             });
             localStorage.removeItem('laserfit-custom-thresholds');
             localStorage.removeItem('laserfit-custom-shooting');
+            // Les exercices ajoutés reviennent à leur barème de création
+            CUSTOM_EXERCISES.forEach(installCustomExercise);
             rebuildNormalizedMaps();
             buildAdminBaremes();
             buildAdminShooting();
@@ -2514,7 +2818,7 @@
 
             const totalArchived = pendingRows.length;
             if (totalArchived > 0) {
-                const names = pendingRows.map(r => r.studentName).join(', ');
+                const names = pendingRows.map(r => esc(r.studentName)).join(', ');
                 info.style.display = 'block';
                 info.innerHTML = '📋 ' + totalArchived + ' observation' + (totalArchived > 1 ? 's' : '')
                     + ' archivée' + (totalArchived > 1 ? 's' : '')
@@ -2565,8 +2869,8 @@
                 title: '💪 1/2 Burpees avec extension',
                 text: '<strong>Pratiquant :</strong> Debout → mains au sol → allonger les jambes → saut groupé → saut extension bras levés.<br><strong>Coach :</strong> Compter après chaque saut extension (pieds décollés du sol).'
             },
-            'STEP UP': {
-                title: '📦 Step Up (Montées-Descentes)',
+            'STEP UPS': {
+                title: '📦 Step Ups (Montées-Descentes)',
                 text: '<strong>Pratiquant :</strong> Face au banc/steps, monter un pied après l\'autre (pieds à plat sur le support), puis redescendre.<br><strong>Coach :</strong> Compter une répétition au retour au sol des deux pieds.'
             },
             'POMPES INCLINÉES': {
@@ -2589,8 +2893,8 @@
                 title: '🦵 Montées de genoux (skipping)',
                 text: '<strong>Pratiquant :</strong> Course sur place en montant les genoux le plus haut possible (idéalement à hauteur de hanche).<br><strong>Coach :</strong> Compter une répétition à chaque fois qu\'un genou atteint la hauteur requise.'
             },
-            'SQUATS': {
-                title: '🏋️ Squats (flexions de jambes)',
+            '1/2 SQUATS': {
+                title: '🏋️ 1/2 Squats (flexions de jambes)',
                 text: '<strong>Pratiquant :</strong> Debout, pieds écartés largeur d\'épaules, descendre en fléchissant les jambes (cuisses parallèles au sol) puis remonter.<br><strong>Coach :</strong> Compter une répétition quand le pratiquant est revenu en position debout.'
             },
             'MOUNTAIN CLIMBERS': {
@@ -2598,8 +2902,8 @@
                 text: '<strong>Pratiquant :</strong> Position de planche (gainage), ramener alternativement les genoux vers la poitrine en gardant le dos droit.<br><strong>Coach :</strong> Compter une répétition à chaque changement de jambe.'
             }
 ,
-            'PLANCHE MILITAIRE': {
-                title: '🪖 Planche militaire (commando)',
+            'PLANCHES MILITAIRES': {
+                title: '🪖 Planches militaires (commando)',
                 text: '<strong>Pratiquant :</strong> En planche, descendre sur un avant-bras puis l\'autre, puis remonter sur la main puis l\'autre, buste gainé.<br><strong>Coach :</strong> Compter 1 répétition après le passage sur <em>les 2 bras</em> (descente + remontée complètes).<br><strong>À valider :</strong> Gainage (bassin stable), mains sous épaules, amplitude complète.'
             },
 
@@ -2700,43 +3004,65 @@
         ];
         
         // Fonction pour jouer un bip sonore
+        // Un seul AudioContext pour toute l'app (en créer un par bip finit par épuiser
+        // les contextes audio de la WebView sur les tablettes lentes).
+        let __audioCtx = null;
+        function getAudioContext() {
+            if (!__audioCtx) {
+                const Ctx = window.AudioContext || window.webkitAudioContext;
+                if (!Ctx) return null;
+                try { __audioCtx = new Ctx(); } catch (e) { return null; }
+            }
+            if (__audioCtx.state === 'suspended' && __audioCtx.resume) {
+                try { __audioCtx.resume(); } catch (e) { /* ignore */ }
+            }
+            return __audioCtx;
+        }
+
+        // Débloque l'audio dès le premier geste de l'utilisateur (politique autoplay)
+        ['touchstart', 'click', 'keydown'].forEach(function (evt) {
+            document.addEventListener(evt, function unlock() {
+                getAudioContext();
+                document.removeEventListener(evt, unlock, true);
+            }, true);
+        });
+        // Au retour au premier plan, le contexte peut avoir été suspendu par Android
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'visible' && __audioCtx) getAudioContext();
+        });
+
+        // Joue une note courte : fréquence (Hz), délai (s) et durée (s) à partir de maintenant
+        function playTone(ctx, freq, delay, duration) {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            const t = ctx.currentTime + delay;
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.3, t);
+            gain.gain.exponentialRampToValueAtTime(0.01, t + duration);
+            osc.start(t);
+            osc.stop(t + duration);
+            osc.onended = function () {
+                try { osc.disconnect(); gain.disconnect(); } catch (e) { /* ignore */ }
+            };
+        }
+
         function playBeep(type = 'start') {
             if (!state.soundEnabled) return;
-            
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            if (type === 'start') {
-                // Bip de démarrage : son aigu et court
-                oscillator.frequency.value = 880; // La5
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.1);
-            } else if (type === 'end') {
-                // Bip de fin : double bip
-                oscillator.frequency.value = 440; // La4
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.15);
-                
-                // Deuxième bip
-                setTimeout(() => {
-                    const osc2 = audioContext.createOscillator();
-                    const gain2 = audioContext.createGain();
-                    osc2.connect(gain2);
-                    gain2.connect(audioContext.destination);
-                    osc2.frequency.value = 880;
-                    gain2.gain.setValueAtTime(0.3, audioContext.currentTime);
-                    gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
-                    osc2.start(audioContext.currentTime);
-                    osc2.stop(audioContext.currentTime + 0.15);
-                }, 150);
+            const ctx = getAudioContext();
+            if (!ctx) return;
+            try {
+                if (type === 'start') {
+                    // Bip de démarrage : son aigu et court
+                    playTone(ctx, 880, 0, 0.1);
+                } else if (type === 'end') {
+                    // Bip de fin : double bip (La4 puis La5), planifié sur l'horloge audio
+                    playTone(ctx, 440, 0, 0.15);
+                    playTone(ctx, 880, 0.15, 0.15);
+                }
+            } catch (e) {
+                console.warn('Bip impossible:', e);
             }
         }
         
@@ -2993,7 +3319,7 @@
                     root.style.setProperty('--bg-dark', theme.bgLight);
                     root.style.setProperty('--bg-card', theme.bgCard);
                     root.style.setProperty('--text', theme.textDark);
-                    root.style.setProperty('--text-dim', '#666666');
+                    root.style.setProperty('--text-dim', '#444444');
                     
                     body.style.cssText = `background: ${theme.bgLight} !important; color: ${theme.textDark} !important;`;
                     root.style.background = theme.bgLight;
@@ -3077,7 +3403,7 @@
                             
                             /* Bouton circulaire de démarrage en ROSE */
                             .btn-circular-start {
-                                background: linear-gradient(135deg, #FF0066, #FF3399) !important;
+                                background: #FF0066 !important;
                                 box-shadow: 0 8px 30px rgba(255, 0, 102, 0.5) !important;
                             }
                             
@@ -3598,15 +3924,15 @@
             'SAUT À LA CORDE': 'animations/saut-corde.gif',
             'JUMPING JACK': 'animations/jumping-jack.gif',
             '1/2 BURPEES': 'animations/burpees.gif',
-            'STEP UP': 'animations/step-up.gif',
+            'STEP UPS': 'animations/step-up.gif',
             'POMPES INCLINÉES': 'animations/pompes.gif',
             'ALLER RETOURS': 'animations/aller-retours.gif',
             'SAUTS LATÉRAUX': 'animations/sauts-lateraux.gif',
             'SAUTS GROUPÉS': 'animations/sauts-groupes.gif',
             'MONTÉES DE GENOUX': 'animations/montees-genoux.gif',
-            'SQUATS': 'animations/squats.gif',
+            '1/2 SQUATS': 'animations/squats.gif',
             'MOUNTAIN CLIMBERS': 'animations/mountain-climber.gif',
-            'PLANCHE MILITAIRE': 'animations/planche-militaire.gif',
+            'PLANCHES MILITAIRES': 'animations/planche-militaire.gif',
             'FENTES AVANT': 'animations/fentes-avant.gif',
             'FENTES LATÉRALES': 'animations/fentes-laterales.gif'
         };
@@ -3626,6 +3952,241 @@
         const EXERCISE_DEMOS_N = Object.fromEntries(Object.entries(EXERCISE_DEMOS).map(([k,v]) => [normExName(k), v]));
         let EXERCISE_THRESHOLDS_N = Object.fromEntries(Object.entries(EXERCISE_THRESHOLDS).map(([k,v]) => [normExName(k), v]));
         const EXERCISE_INSTRUCTIONS_N = Object.fromEntries(Object.entries(EXERCISE_INSTRUCTIONS).map(([k,v]) => [normExName(k), v]));
+
+        // ============================================
+        // EXERCICES PERSONNALISÉS ET MENU DE CHOIX
+        // ============================================
+        const CUSTOM_EX_KEY = 'laserfit-custom-exercises';
+        const HIDDEN_EX_KEY = 'laserfit-hidden-exercises';
+        const MAX_CUSTOM_EXERCISES = 20;
+        const EXERCISE_NAME_RE = /^[A-Za-zÀ-ÿ0-9][A-Za-zÀ-ÿ0-9 '\/.+-]*$/;
+        // Précisions affichées entre parenthèses dans le menu pour les exercices d'origine
+        const EXERCISE_HINTS = {
+            '1/2 SQUATS': 'flexions jambes',
+            'ALLER RETOURS': 'largeur terrain volley',
+            'MONTÉES DE GENOUX': 'skipping',
+            'PLANCHES MILITAIRES': 'planche commando',
+            'SAUTS GROUPÉS': 'kangourou',
+            'STEP UPS': 'montée contre-haut'
+        };
+
+        function readJsonKey(key, fallback) {
+            try {
+                const v = JSON.parse(localStorage.getItem(key));
+                return (v === null || v === undefined) ? fallback : v;
+            } catch (e) { return fallback; }
+        }
+
+        // [{ name, description, thresholds: [{min, max (null = ∞), points}] }]
+        let CUSTOM_EXERCISES = (function () {
+            const raw = readJsonKey(CUSTOM_EX_KEY, []);
+            if (!Array.isArray(raw)) return [];
+            return raw.filter(function (e) {
+                return e && typeof e.name === 'string' && EXERCISE_NAME_RE.test(e.name) &&
+                    Array.isArray(e.thresholds) && e.thresholds.length > 0;
+            }).slice(0, MAX_CUSTOM_EXERCISES);
+        })();
+
+        function isCustomExercise(name) {
+            return CUSTOM_EXERCISES.some(function (e) { return e.name === name; });
+        }
+
+        function getHiddenExercises() {
+            const h = readJsonKey(HIDDEN_EX_KEY, []);
+            return Array.isArray(h) ? h.filter(function (x) { return typeof x === 'string'; }) : [];
+        }
+
+        function sortedExerciseNames() {
+            return Object.keys(EXERCISE_THRESHOLDS).sort(function (a, b) {
+                return a.localeCompare(b, 'fr', { sensitivity: 'base' });
+            });
+        }
+
+        function exerciseDescription(name) {
+            const custom = CUSTOM_EXERCISES.filter(function (e) { return e.name === name; })[0];
+            if (custom) return custom.description || '';
+            return EXERCISE_HINTS[name] || '';
+        }
+
+        function fallbackInstructions(name) {
+            return {
+                title: '🏃 ' + esc(name),
+                text: '<strong>Coach :</strong> Compter une répétition à chaque mouvement réussi.'
+            };
+        }
+
+        // Ajoute (ou remplace) un exercice personnalisé dans les tables de barèmes et de consignes
+        function installCustomExercise(ex) {
+            const th = ex.thresholds.map(function (t) {
+                return { min: t.min, max: (t.max === null || t.max === undefined) ? Infinity : t.max, points: t.points };
+            });
+            EXERCISE_THRESHOLDS[ex.name] = th;
+            const desc = ex.description ? esc(ex.description) + '<br>' : '';
+            EXERCISE_INSTRUCTIONS[ex.name] = {
+                title: '🏃 ' + esc(ex.name),
+                text: desc + '<strong>Coach :</strong> Compter une répétition à chaque mouvement réussi.'
+            };
+            const n = normExName(ex.name);
+            EXERCISE_THRESHOLDS_N[n] = EXERCISE_THRESHOLDS[ex.name];
+            EXERCISE_INSTRUCTIONS_N[n] = EXERCISE_INSTRUCTIONS[ex.name];
+        }
+
+        // Menu déroulant : exercices visibles, par ordre alphabétique
+        function rebuildExerciseSelector() {
+            const sel = document.getElementById('exerciseSelector');
+            if (!sel) return;
+            const hidden = getHiddenExercises();
+            const current = sel.value;
+            while (sel.options.length > 1) sel.remove(1);
+            sortedExerciseNames().forEach(function (name) {
+                if (hidden.indexOf(name) >= 0) return;
+                const opt = document.createElement('option');
+                opt.value = name;
+                const d = exerciseDescription(name);
+                opt.textContent = d ? name + ' (' + d + ')' : name;
+                sel.appendChild(opt);
+            });
+            sel.value = current;
+        }
+
+        // --- Formulaire d'ajout (panneau admin) ---
+        function toggleAdminAddExercise() {
+            const box = document.getElementById('adminAddExercise');
+            const open = box.style.display === 'none';
+            box.style.display = open ? 'block' : 'none';
+            if (open) {
+                document.getElementById('adminNewExName').value = '';
+                document.getElementById('adminNewExDesc').value = '';
+                document.getElementById('adminNewExError').style.display = 'none';
+                const c = document.getElementById('adminNewExPaliers');
+                c.innerHTML = '';
+                [0, 10, 20, 30, 40, 50].forEach(function (v) { addAdminPalier(v, v); });
+                document.getElementById('adminNewExName').focus();
+            }
+        }
+
+        function addAdminPalier(min, points) {
+            const c = document.getElementById('adminNewExPaliers');
+            const first = c.children.length === 0;
+            const last = c.lastElementChild ? parseInt(c.lastElementChild.querySelector('[data-pmin]').value, 10) : -10;
+            const m = (typeof min === 'number') ? min : (isNaN(last) ? 0 : last + 10);
+            const p = (typeof points === 'number') ? points : 0;
+            const row = document.createElement('div');
+            row.className = 'admin-new-row';
+            row.innerHTML = `<span>À partir de (rép.)</span>
+                <input type="number" min="0" max="999" value="${m}" data-pmin ${first ? 'disabled' : ''} aria-label="Répétitions minimum du palier">
+                <input type="number" min="0" max="100" value="${p}" data-ppts aria-label="Points du palier">
+                ${first ? '<span></span>' : '<button type="button" aria-label="Supprimer ce palier" onclick="this.parentNode.remove()">✕</button>'}`;
+            c.appendChild(row);
+        }
+
+        function adminNewExError(msg) {
+            const el = document.getElementById('adminNewExError');
+            el.textContent = msg;
+            el.style.display = msg ? 'block' : 'none';
+        }
+
+        function submitAdminNewExercise() {
+            const name = document.getElementById('adminNewExName').value.replace(/\s+/g, ' ').trim().toUpperCase();
+            const desc = document.getElementById('adminNewExDesc').value.replace(/\s+/g, ' ').trim();
+
+            if (!name) { adminNewExError('Le nom de l\'exercice est obligatoire.'); return; }
+            if (!EXERCISE_NAME_RE.test(name)) {
+                adminNewExError('Nom invalide : lettres, chiffres, espaces et / . + - \' uniquement.');
+                return;
+            }
+            if (!EXERCISE_NAME_RE.test(desc || 'x') && desc) {
+                adminNewExError('Description invalide : lettres, chiffres, espaces et / . + - \' uniquement.');
+                return;
+            }
+            const taken = Object.keys(EXERCISE_THRESHOLDS).some(function (k) { return normExName(k) === normExName(name); });
+            if (taken) { adminNewExError('Un exercice portant ce nom existe déjà.'); return; }
+            if (CUSTOM_EXERCISES.length >= MAX_CUSTOM_EXERCISES) {
+                adminNewExError('Maximum ' + MAX_CUSTOM_EXERCISES + ' exercices ajoutés.');
+                return;
+            }
+
+            const rows = [].slice.call(document.querySelectorAll('#adminNewExPaliers .admin-new-row'));
+            if (rows.length < 2) { adminNewExError('Il faut au moins 2 paliers.'); return; }
+            const mins = [];
+            const pts = [];
+            for (let i = 0; i < rows.length; i++) {
+                const m = parseInt(rows[i].querySelector('[data-pmin]').value, 10);
+                const p = parseInt(rows[i].querySelector('[data-ppts]').value, 10);
+                if (isNaN(m) || m < 0 || isNaN(p) || p < 0 || p > 100) {
+                    adminNewExError('Paliers : répétitions ≥ 0 et points entre 0 et 100.');
+                    return;
+                }
+                if (i === 0 && m !== 0) { adminNewExError('Le premier palier doit commencer à 0 répétition.'); return; }
+                if (i > 0 && m <= mins[i - 1]) {
+                    adminNewExError('Les paliers doivent être en ordre croissant de répétitions.');
+                    return;
+                }
+                mins.push(m);
+                pts.push(p);
+            }
+            const thresholds = mins.map(function (m, i) {
+                return { min: m, max: i < mins.length - 1 ? mins[i + 1] - 1 : null, points: pts[i] };
+            });
+
+            const ex = { name: name, description: desc, thresholds: thresholds };
+            CUSTOM_EXERCISES.push(ex);
+            try {
+                localStorage.setItem(CUSTOM_EX_KEY, JSON.stringify(CUSTOM_EXERCISES));
+            } catch (e) {
+                CUSTOM_EXERCISES.pop();
+                adminNewExError('Impossible d\'enregistrer sur cette tablette.');
+                return;
+            }
+            installCustomExercise(ex);
+            rebuildNormalizedMaps();
+            rebuildExerciseSelector();
+            adminNewExError('');
+            document.getElementById('adminAddExercise').style.display = 'none';
+            buildAdminBaremes(name);
+            alert('Exercice « ' + name + ' » ajouté. Il apparaît dans le menu de choix des exercices.');
+        }
+
+        function deleteCustomExercise(name) {
+            if (!isCustomExercise(name)) return;
+            if (!confirm('Supprimer l\'exercice « ' + name + ' » ?')) return;
+            CUSTOM_EXERCISES = CUSTOM_EXERCISES.filter(function (e) { return e.name !== name; });
+            delete EXERCISE_THRESHOLDS[name];
+            delete EXERCISE_INSTRUCTIONS[name];
+            const n = normExName(name);
+            delete EXERCISE_THRESHOLDS_N[n];
+            delete EXERCISE_INSTRUCTIONS_N[n];
+            try {
+                localStorage.setItem(CUSTOM_EX_KEY, JSON.stringify(CUSTOM_EXERCISES));
+                const hidden = getHiddenExercises().filter(function (x) { return x !== name; });
+                localStorage.setItem(HIDDEN_EX_KEY, JSON.stringify(hidden));
+                const saved = readJsonKey('laserfit-custom-thresholds', null);
+                if (saved && saved[name]) {
+                    delete saved[name];
+                    localStorage.setItem('laserfit-custom-thresholds', JSON.stringify(saved));
+                }
+            } catch (e) { /* ignore */ }
+            // Retiré aussi de la séance en cours de préparation
+            state.exercises = state.exercises.filter(function (x) { return x !== name; });
+            rebuildExerciseSelector();
+            buildAdminBaremes();
+        }
+
+        // Démarrage : exercices ajoutés (avec leurs points modifiés) puis menu
+        (function () {
+            const savedPoints = readJsonKey('laserfit-custom-thresholds', {}) || {};
+            CUSTOM_EXERCISES.forEach(function (ex) {
+                installCustomExercise(ex);
+                const sp = savedPoints[ex.name];
+                if (Array.isArray(sp) && sp.length === ex.thresholds.length) {
+                    EXERCISE_THRESHOLDS[ex.name] = sp.map(function (t) {
+                        return { min: t.min, max: t.max === null ? Infinity : t.max, points: t.points };
+                    });
+                    EXERCISE_THRESHOLDS_N[normExName(ex.name)] = EXERCISE_THRESHOLDS[ex.name];
+                }
+            });
+            rebuildExerciseSelector();
+        })();
 
         // Réordonner les ateliers dans le récapitulatif (↑ / ↓)
         function moveAtelierUp(index) {
@@ -3801,7 +4362,7 @@
                 document.getElementById('repSection').classList.remove('hidden');
                 document.getElementById('shootingSection').classList.add('hidden');
                 
-                const instructions = EXERCISE_INSTRUCTIONS_N[normExName(atelier.name)];
+                const instructions = EXERCISE_INSTRUCTIONS_N[normExName(atelier.name)] || fallbackInstructions(atelier.name);
                 document.getElementById('atelierInstructions').innerHTML = `
                     <div class="instructions-title">${instructions.title} - Exercice ${atelier.number}</div>
                     <div class="instructions-text">${instructions.text}</div>
@@ -4049,7 +4610,7 @@
                 document.getElementById('repSection').classList.remove('hidden');
                 document.getElementById('shootingSection').classList.add('hidden');
                 
-                const instructions = EXERCISE_INSTRUCTIONS_N[normExName(nextAtelier.name)];
+                const instructions = EXERCISE_INSTRUCTIONS_N[normExName(nextAtelier.name)] || fallbackInstructions(nextAtelier.name);
                 document.getElementById('atelierInstructions').innerHTML = `
                     <div class="instructions-title">${instructions.title} - Exercice ${nextAtelier.number}</div>
                     <div class="instructions-text">${instructions.text}</div>
@@ -4492,7 +5053,7 @@
             modal.innerHTML = `
                 <div class="modal-content" style="max-width: 700px;">
                     <div class="modal-header">
-                        <h2>🏅 Classement de la classe ${className}</h2>
+                        <h2>🏅 Classement de la classe ${esc(className)}</h2>
                         <button class="close-btn" onclick="this.closest('.modal').remove()">✕</button>
                     </div>
                     
@@ -4551,7 +5112,7 @@
                                         ${index < 3 ? medals[index] : `${index + 1}.`}
                                     </td>
                                     <td style="padding: 12px; color: var(--text); font-weight: ${entry.studentName === state.studentName ? 'bold' : 'normal'};">
-                                        ${entry.studentName}${entry.studentName === state.studentName ? ' (Toi)' : ''}
+                                        ${esc(entry.studentName)}${entry.studentName === state.studentName ? ' (Toi)' : ''}
                                     </td>
                                     <td style="padding: 12px; text-align: right; color: var(--secondary); font-weight: bold;">
                                         ${entry[pointsField]} pts
@@ -4686,7 +5247,7 @@
                 team.members.forEach((member, memberIndex) => {
                     membersHTML += `
                         <div class="team-member">
-                            <span class="team-member-name">${member}</span>
+                            <span class="team-member-name">${esc(member)}</span>
                             <button onclick="removeMember(${teamIndex}, ${memberIndex})" style="background: var(--danger); border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;">✕</button>
                         </div>
                     `;
@@ -4700,7 +5261,7 @@
                             <label style="display: block; font-weight: 600; margin-bottom: 10px; color: var(--text);">
                                 🏷️ Nom de l'équipe (personnalisable)
                             </label>
-                            <input type="text" id="teamName-${teamIndex}" value="${team.name}" 
+                            <input type="text" id="teamName-${teamIndex}" value="${esc(team.name)}" 
                                    onchange="updateTeamName(${teamIndex}, this.value)"
                                    style="width: 100%; padding: 10px; background: rgba(255, 255, 255, 0.1); border: 2px solid ${team.border}; border-radius: 8px; color: var(--text); font-size: 1.1rem; font-weight: 600;">
                             
@@ -4726,7 +5287,7 @@
                     <div class="team-header">
                         <div class="team-name">
                             <span style="font-size: 2rem;">${team.emoji}</span>
-                            <span>Équipe ${team.name}</span>
+                            <span>Équipe ${esc(team.name)}</span>
                         </div>
                         <span style="color: var(--text-dim);">${team.members.length} membre(s)</span>
                     </div>
@@ -4807,26 +5368,101 @@
                 return;
             }
             
-            // Demander les infos de base pour la séance
-            const observerName = prompt('Nom de l\'observateur/coach :');
-            if (!observerName || !observerName.trim()) {
-                alert('Le nom de l\'observateur est obligatoire.');
+            // Infos de base de la séance : un seul formulaire (à la place de 3 prompt() successifs)
+            openTeamInfoForm();
+        }
+
+        function openTeamInfoForm() {
+            const old = document.getElementById('teamInfoModal');
+            if (old) old.remove();
+
+            // Pré-remplissage : valeurs déjà saisies, sinon dernières valeurs utilisées sur cette tablette
+            let last = {};
+            try { last = JSON.parse(localStorage.getItem('laserfit-last-team-info') || '{}') || {}; } catch (e) { last = {}; }
+            const obsEl = document.getElementById('observerName');
+            const clsEl = document.getElementById('className');
+            const grpEl = document.getElementById('groupName');
+            const observer = state.observerName || (obsEl && obsEl.value) || last.observer || '';
+            const cls = state.className || (clsEl && clsEl.value) || last.className || '';
+            const group = state.groupName || (grpEl && grpEl.value) || last.group || '';
+
+            const fieldStyle = 'width: 100%; padding: 12px 14px; min-height: 48px; font-size: 1.1rem; ' +
+                'background: rgba(255, 255, 255, 0.08); border: 2px solid rgba(255, 255, 255, 0.2); ' +
+                'border-radius: 10px; color: var(--text); margin-top: 6px;';
+            const labelStyle = 'display: block; font-weight: 600; margin-top: 16px; color: var(--text);';
+
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.id = 'teamInfoModal';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 520px;">
+                    <div class="modal-header">
+                        <h2>👥 Infos de la séance</h2>
+                    </div>
+                    <div class="modal-body">
+                        <label style="${labelStyle} margin-top: 0;" for="teamInfoObserver">Observateur / coach *</label>
+                        <input type="text" id="teamInfoObserver" style="${fieldStyle}" autocomplete="off"
+                               value="${esc(observer)}" onkeydown="if(event.key==='Enter')submitTeamInfoForm()">
+
+                        <label style="${labelStyle}" for="teamInfoClass">Classe * <span style="font-weight: 400; color: var(--text-dim);">(ex : 3ème A)</span></label>
+                        <input type="text" id="teamInfoClass" style="${fieldStyle}" autocomplete="off"
+                               value="${esc(cls)}" onkeydown="if(event.key==='Enter')submitTeamInfoForm()">
+
+                        <label style="${labelStyle}" for="teamInfoGroup">Groupe <span style="font-weight: 400; color: var(--text-dim);">(facultatif)</span></label>
+                        <input type="text" id="teamInfoGroup" style="${fieldStyle}" autocomplete="off"
+                               value="${esc(group)}" onkeydown="if(event.key==='Enter')submitTeamInfoForm()">
+
+                        <p id="teamInfoError" role="alert" style="display: none; color: var(--danger); font-weight: 600; margin-top: 14px;"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary btn-full" onclick="submitTeamInfoForm()"><span>✅ Valider</span></button>
+                        <button class="btn btn-secondary btn-full" style="margin-top: 10px;" onclick="closeTeamInfoForm()"><span>Annuler</span></button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            const first = document.getElementById(observer ? (cls ? 'teamInfoGroup' : 'teamInfoClass') : 'teamInfoObserver');
+            if (first) first.focus();
+        }
+
+        function closeTeamInfoForm() {
+            const m = document.getElementById('teamInfoModal');
+            if (m) m.remove();
+        }
+
+        function submitTeamInfoForm() {
+            const observer = document.getElementById('teamInfoObserver').value.trim();
+            const cls = document.getElementById('teamInfoClass').value.trim();
+            const group = document.getElementById('teamInfoGroup').value.trim();
+            const err = document.getElementById('teamInfoError');
+
+            const missing = [];
+            if (!observer) missing.push('teamInfoObserver');
+            if (!cls) missing.push('teamInfoClass');
+            ['teamInfoObserver', 'teamInfoClass'].forEach(function (id) {
+                document.getElementById(id).style.borderColor = missing.indexOf(id) >= 0 ? 'var(--danger)' : 'rgba(255, 255, 255, 0.2)';
+            });
+            if (missing.length > 0) {
+                err.textContent = !observer && !cls ? 'Le nom de l\'observateur et la classe sont obligatoires.'
+                    : (!observer ? 'Le nom de l\'observateur est obligatoire.' : 'La classe est obligatoire.');
+                err.style.display = 'block';
+                document.getElementById(missing[0]).focus();
                 return;
             }
-            
-            const className = prompt('Classe (ex: 3ème A) :');
-            if (!className || !className.trim()) {
-                alert('La classe est obligatoire.');
-                return;
-            }
-            
-            const groupName = prompt('Groupe (optionnel) :');
-            
-            // Enregistrer les infos
-            state.observerName = observerName.trim();
-            state.className = className.trim();
-            state.groupName = groupName ? groupName.trim() : '';
-            
+
+            state.observerName = observer;
+            state.className = cls;
+            state.groupName = group;
+            try {
+                localStorage.setItem('laserfit-last-team-info', JSON.stringify({ observer: observer, className: cls, group: group }));
+            } catch (e) { /* non critique */ }
+
+            closeTeamInfoForm();
+            finishTeamSessionSetup();
+        }
+
+        function finishTeamSessionSetup() {
             // Date et heure automatiques
             const now = new Date();
             state.sessionDate = now.toISOString().split('T')[0];
@@ -4884,7 +5520,7 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                         <div style="font-size: 1.3rem; font-weight: 700;">
                             ${rank === 0 ? '🥇 ' : rank === 1 ? '🥈 ' : rank === 2 ? '🥉 ' : ''}
-                            ${team.emoji} Équipe ${team.name}
+                            ${team.emoji} Équipe ${esc(team.name)}
                         </div>
                         <div style="font-size: 2rem; font-weight: 900; color: ${team.border};">
                             ${team.totalScore} pts
@@ -4906,8 +5542,8 @@
             const container = document.getElementById('currentRunner');
             container.innerHTML = `
                 <div style="font-size: 2.5rem; margin-bottom: 10px;">${team.emoji}</div>
-                <div style="color: var(--text); font-size: 1.5rem; margin-bottom: 5px;">${runner}</div>
-                <div style="color: var(--text-dim); font-size: 1rem;">Équipe ${team.name}</div>
+                <div style="color: var(--text); font-size: 1.5rem; margin-bottom: 5px;">${esc(runner)}</div>
+                <div style="color: var(--text-dim); font-size: 1rem;">Équipe ${esc(team.name)}</div>
                 <div style="color: var(--text-dim); font-size: 0.9rem; margin-top: 10px;">
                     Coureur ${state.currentRunnerIndex + 1}/${team.members.length} de l'équipe
                 </div>
@@ -5041,7 +5677,7 @@
                 const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
                 rankingHTML += `
                     <div style="padding: 10px; margin: 5px 0; background: rgba(255, 255, 255, 0.05); border-radius: 8px; display: flex; justify-content: space-between;">
-                        <span>${medal} ${t.emoji} ${t.name}</span>
+                        <span>${medal} ${t.emoji} ${esc(t.name)}</span>
                         <span style="font-weight: bold; color: ${t.border};">${t.totalScore} pts</span>
                     </div>
                 `;
@@ -5049,13 +5685,13 @@
             
             // Prochain coureur
             const nextRunner = state.currentTeamIndex < state.teams.length ? 
-                `${state.teams[state.currentTeamIndex].emoji} ${state.teams[state.currentTeamIndex].members[state.currentRunnerIndex]} (${state.teams[state.currentTeamIndex].name})` 
+                `${state.teams[state.currentTeamIndex].emoji} ${esc(state.teams[state.currentTeamIndex].members[state.currentRunnerIndex])} (${esc(state.teams[state.currentTeamIndex].name)})` 
                 : 'Dernier coureur !';
             
             modal.innerHTML = `
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h2>✅ ${runner} a terminé !</h2>
+                        <h2>✅ ${esc(runner)} a terminé !</h2>
                     </div>
                     
                     <div class="modal-body" style="text-align: center;">
@@ -5069,7 +5705,7 @@
                         ${badgesHTML}
                         
                         <div style="margin: 30px 0; padding: 20px; background: rgba(${team.color}, 0.1); border-radius: 12px; border: 2px solid ${team.border};">
-                            <div style="font-size: 1.1rem; margin-bottom: 10px;">Score Équipe ${team.name}</div>
+                            <div style="font-size: 1.1rem; margin-bottom: 10px;">Score Équipe ${esc(team.name)}</div>
                             <div style="font-size: 2.5rem; font-weight: 900; color: ${team.border};">
                                 ${team.totalScore - score} → ${team.totalScore} pts
                             </div>
@@ -5203,7 +5839,7 @@
                 modeInfoHTML = `
                     <div style="margin: 20px 0; padding: 20px; background: rgba(0, 255, 204, 0.1); border: 2px solid var(--secondary); border-radius: 12px; text-align: center;">
                         <div style="font-size: 1.3rem; font-weight: 700; color: var(--secondary); margin-bottom: 10px;">
-                            📱 Mode Parallèle - Équipe ${sortedTeams[0].emoji} ${sortedTeams[0].name}
+                            📱 Mode Parallèle - Équipe ${sortedTeams[0].emoji} ${esc(sortedTeams[0].name)}
                         </div>
                         <div style="font-size: 0.9rem; color: var(--text-dim);">
                             Cette équipe a couru seule sur cette tablette.<br>
@@ -5234,7 +5870,7 @@
                     podiumHTML += `
                         <div class="podium-place ${places[index]}">
                             <div class="podium-medal">${medals[index]}</div>
-                            <div class="podium-team">${team.emoji} ${team.name}</div>
+                            <div class="podium-team">${team.emoji} ${esc(team.name)}</div>
                             <div class="podium-score">${team.totalScore} pts</div>
                             <div class="podium-block">${index + 1}</div>
                         </div>
@@ -5251,8 +5887,8 @@
             );
             
             const teamTitle = isParallel 
-                ? `📊 Détail de l'équipe ${winner.emoji} ${winner.name}`
-                : `📊 Détail Équipe ${winner.name} (Gagnante) ${winner.emoji}`;
+                ? `📊 Détail de l'équipe ${winner.emoji} ${esc(winner.name)}`
+                : `📊 Détail Équipe ${esc(winner.name)} (Gagnante) ${winner.emoji}`;
             
             let detailHTML = `
                 <div style="margin: 30px 0; padding: 25px; background: rgba(${winner.color}, 0.1); border: 2px solid ${winner.border}; border-radius: 12px;">
@@ -5267,7 +5903,7 @@
                 const isMVP = result.runnerName === mvp.runnerName;
                 detailHTML += `
                     <div style="padding: 10px; margin: 5px 0; background: rgba(255, 255, 255, 0.05); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                        <span>• ${result.runnerName}</span>
+                        <span>• ${esc(result.runnerName)}</span>
                         <span style="font-weight: bold; color: ${winner.border};">${result.score} pts ${isMVP ? '🌟 MVP' : ''}</span>
                     </div>
                 `;
@@ -5386,7 +6022,7 @@
             let csv = `LASER FIT - RÉSULTATS MODE ÉQUIPE\n`;
             csv += `Date;${state.sessionDate}\n`;
             csv += `Heure;${state.sessionTime}\n`;
-            csv += `Classe;${state.className}\n`;
+            csv += `Classe;${csvCell(state.className)}\n`;
             csv += `Mode;${mode}\n`;
             csv += `Temps total;${totalTimeStr}\n`;
             csv += `Nombre de coureurs;${nbCoureurs}\n`;
@@ -5402,7 +6038,7 @@
                     `${r.name}: ${r.reps || r.hits || 0} (${r.totalPoints}pts)`
                 ).join(' | ');
                 
-                csv += `${result.matchId};${result.date};${result.time};${result.className};${result.teamName};${result.teamId};${result.runnerName};${result.runnerIndex + 1};${result.score};"${details}"\n`;
+                csv += `${result.matchId};${result.date};${result.time};${csvCell(result.className)};${csvCell(result.teamName)};${result.teamId};${csvCell(result.runnerName)};${result.runnerIndex + 1};${result.score};${csvCell(details)}\n`;
             });
             
             // Totaux par équipe
@@ -5424,7 +6060,7 @@
                 const medals = ['🥇', '🥈', '🥉'];
                 const rank = index < 3 ? medals[index] : (index + 1);
                 
-                csv += `${rank};${team.name};${team.totalScore};${teamResults.length};${avg};${stdDev}\n`;
+                csv += `${rank};${csvCell(team.name)};${team.totalScore};${teamResults.length};${avg};${stdDev}\n`;
             });
             
             // MVP
@@ -5436,7 +6072,7 @@
                     const mvp = teamResults.reduce((best, current) => 
                         current.score > best.score ? current : best
                     );
-                    csv += `${team.name};${mvp.runnerName};${mvp.score}\n`;
+                    csv += `${csvCell(team.name)};${csvCell(mvp.runnerName)};${mvp.score}\n`;
                 }
             });
             
@@ -5453,7 +6089,7 @@
             // Télécharger
             const BOM = '\uFEFF';
             const filename = nbEquipes === 1
-                ? `laserfit_team_${state.teams[0].name}_${state.teamMatchId}.csv`
+                ? `laserfit_team_${safeFileName(state.teams[0].name, 'equipe')}_${state.teamMatchId}.csv`
                 : `laserfit_team_match_${state.teamMatchId}.csv`;
             const fullContent = BOM + csv;
 
@@ -5593,9 +6229,9 @@
                 let row = [
                     obs.sessionDate, obs.sessionTime, obs.className,
                     obs.groupName || '', obs.studentName, obs.observerName
-                ];
+                ].map(csvCell);
                 obs.results.forEach(result => {
-                    row.push(result.name);
+                    row.push(csvCell(result.name));
                     row.push(result.reps || result.hits || 0);
                     row.push(result.totalPoints);
                 });
@@ -5614,7 +6250,7 @@
             const BOM = '\uFEFF';
 
             // Nom de fichier : LaserFit_AAAA-MM-DD_classe.csv
-            const safeClass = (state.className || 'classe').replace(/\s+/g, '_');
+            const safeClass = safeFileName(state.className, 'classe');
             const filename = `LaserFit_${state.sessionDate}_${safeClass}.csv`;
 
             // Téléchargement : APK WebView → interface Android, sinon fallback blob
@@ -5661,9 +6297,9 @@
             if (allObs.length === 0) return;
 
             // Construire le payload multi-lignes compatible SCAN EPS
-            const header = 'LASERFIT|' + (state.className || '') + '|' + (state.sessionDate || '') + '|' + (state.observerName || '');
+            const header = 'LASERFIT|' + qrField(state.className) + '|' + qrField(state.sessionDate) + '|' + qrField(state.observerName);
             const dataLines = allObs.map(obs => {
-                const parts = [obs.studentName];
+                const parts = [qrField(obs.studentName)];
                 obs.results.forEach(r => {
                     // Nom exercice abrégé (max 8 car.)
                     const shortName = (r.name || '').substring(0, 8);
@@ -5733,7 +6369,7 @@
             }
 
             // Résumé sous le QR code
-            const obsNames = allObs.map(o => o.studentName).join(', ');
+            const obsNames = allObs.map(o => esc(o.studentName)).join(', ');
             const totalAll = allObs.reduce((s, o) => s + o.totalScore, 0);
             const hint = document.createElement('div');
             hint.style.cssText = 'font-size:0.85rem; color:var(--text-dim); text-align:center; max-width:300px; line-height:1.5; margin-top:5px;';
@@ -5869,6 +6505,479 @@
         
         console.log('✅ Écran initial configuré correctement');
       });
+
+        // ============================================
+        // SAUVEGARDE AUTOMATIQUE DE LA SÉANCE
+        // ============================================
+        // La séance (état, observations archivées, écran courant) est écrite dans
+        // localStorage à chaque action, toutes les 15 s et à la mise en arrière-plan.
+        // Au lancement, si une séance interrompue existe, on propose de la reprendre.
+        const SESSION_KEY = 'laserfit-session-v1';
+        const ALL_SCREENS = ['initialModeScreen', 'infoScreen', 'teamSetupScreen', 'teamRelayScreen',
+                             'configScreen', 'sessionScreen', 'resultsScreen'];
+        const INFO_FIELD_IDS = ['studentName', 'observerName', 'className', 'groupName', 'sessionDate', 'sessionTime'];
+        const CONFIG_FIELD_MAP = { numExercises: 'numExercises', numShootingSessions: 'numShootingSessions',
+                                   exerciseTime: 'exerciseTime', pauseTime: 'pauseTime' };
+        let __persistEnabled = false;
+        let __restoringSession = false;
+        let __persistTimer = null;
+        let __lastSnapshotJson = null;
+
+        function currentScreenId() {
+            for (let i = 0; i < ALL_SCREENS.length; i++) {
+                const el = document.getElementById(ALL_SCREENS[i]);
+                if (el && !el.classList.contains('hidden')) return ALL_SCREENS[i];
+            }
+            return null;
+        }
+
+        function showOnlyScreen(id) {
+            ALL_SCREENS.forEach(function (s) {
+                const el = document.getElementById(s);
+                if (el) el.classList.toggle('hidden', s !== id);
+            });
+        }
+
+        function buildSnapshot() {
+            const screen = currentScreenId();
+            let kind = null;
+            if (screen === 'resultsScreen') {
+                kind = 'results';
+            } else if (screen === 'sessionScreen') {
+                const running = !document.getElementById('sessionInProgress').classList.contains('hidden');
+                kind = running ? 'session' : 'recap';
+            } else if (screen === 'teamRelayScreen') {
+                kind = 'relay';
+            } else if (pendingRows.length > 0) {
+                kind = 'info';
+            }
+            if (!kind) return null;
+
+            const st = JSON.parse(JSON.stringify(state, function (k, v) {
+                return (k === 'tabataInterval' || k === 'totalTimeInterval' || k === 'currentTeam') ? undefined : v;
+            }));
+            const fields = {};
+            INFO_FIELD_IDS.forEach(function (id) {
+                const el = document.getElementById(id);
+                if (el) fields[id] = el.value;
+            });
+            const dist = document.getElementById('shootingDistance');
+            return {
+                v: 1,
+                savedAt: Date.now(),
+                kind: kind,
+                state: st,
+                pendingRows: pendingRows,
+                fields: fields,
+                distance: dist ? dist.value : null
+            };
+        }
+
+        function persistSession() {
+            if (!__persistEnabled || __restoringSession) return;
+            try {
+                const snap = buildSnapshot();
+                if (!snap) {
+                    localStorage.removeItem(SESSION_KEY);
+                    __lastSnapshotJson = null;
+                    return;
+                }
+                const json = JSON.stringify(snap);
+                // savedAt change à chaque appel : on compare sans lui pour éviter des écritures inutiles
+                const cmp = json.replace(/"savedAt":\d+,/, '');
+                if (cmp === __lastSnapshotJson) return;
+                localStorage.setItem(SESSION_KEY, json);
+                __lastSnapshotJson = cmp;
+            } catch (e) {
+                console.warn('Sauvegarde séance impossible:', e);
+            }
+        }
+
+        function schedulePersist() {
+            if (!__persistEnabled) return;
+            clearTimeout(__persistTimer);
+            __persistTimer = setTimeout(persistSession, 400);
+        }
+
+        function describeSnapshot(s) {
+            const st = s.state || {};
+            const d = new Date(s.savedAt || Date.now());
+            const hh = ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
+            const n = (s.pendingRows || []).length;
+            const lines = ['🔄 Une séance interrompue a été retrouvée (sauvegardée à ' + hh + ').', ''];
+            const who = st.studentName ? ' - ' + st.studentName : '';
+            const total = (st.sequence || []).length;
+            if (s.kind === 'session' || s.kind === 'recap') {
+                if (st.gameMode === 'team') {
+                    lines.push('Mode équipe, relais en cours' + who + '.');
+                } else {
+                    lines.push('Séance en cours' + who + ' : atelier ' +
+                        Math.min((st.currentSequenceIndex || 0) + 1, Math.max(total, 1)) + '/' + total + '.');
+                }
+                lines.push("L'atelier en cours repartira de zéro.");
+            } else if (s.kind === 'results') {
+                lines.push('Résultats' + who + ' non exportés.');
+            } else if (s.kind === 'relay') {
+                lines.push('Mode équipe, relais en attente du prochain coureur.');
+            } else {
+                lines.push('Observations archivées en attente d\'export.');
+            }
+            if (n > 0) lines.push('📋 ' + n + ' observation' + (n > 1 ? 's' : '') + ' archivée' + (n > 1 ? 's' : '') + '.');
+            lines.push('', 'OK = reprendre la séance', 'Annuler = repartir de zéro (séance supprimée)');
+            return lines.join('\n');
+        }
+
+        function restoreSession(snap) {
+            __restoringSession = true;
+            try {
+                pendingRows = Array.isArray(snap.pendingRows) ? snap.pendingRows : [];
+                Object.assign(state, snap.state || {});
+                // Séance sauvegardée avant le renommage de certains exercices
+                ['exercises', 'exerciseTypes'].forEach(function (k) {
+                    if (Array.isArray(state[k])) state[k] = state[k].map(renameExercise);
+                });
+                (state.sequence || []).forEach(function (a) { if (a && a.name) a.name = renameExercise(a.name); });
+                (state.results || []).forEach(function (r) { if (r && r.name) r.name = renameExercise(r.name); });
+                pendingRows.forEach(function (row) {
+                    (row.results || []).forEach(function (r) { if (r && r.name) r.name = renameExercise(r.name); });
+                });
+                state.tabataInterval = null;
+                state.totalTimeInterval = null;
+                state.tabataRunning = false;
+                state.totalTimeRunning = false;
+                state.waitingForNextRunner = false;
+                state.isInWorkPhase = true;
+                state.tabataTime = state.exerciseTime;
+                if (!Array.isArray(state.results)) state.results = [];
+                if (!Array.isArray(state.sequence)) state.sequence = [];
+                if (state.gameMode === 'team' && state.teams && state.teams[state.currentTeamIndex]) {
+                    state.currentTeam = state.teams[state.currentTeamIndex];
+                }
+
+                // Champs du formulaire (lus directement dans le DOM par certaines fonctions)
+                const f = snap.fields || {};
+                INFO_FIELD_IDS.forEach(function (id) {
+                    const el = document.getElementById(id);
+                    if (el && f[id] !== undefined && f[id] !== null) el.value = f[id];
+                });
+                Object.keys(CONFIG_FIELD_MAP).forEach(function (key) {
+                    const el = document.getElementById(CONFIG_FIELD_MAP[key]);
+                    if (el && state[key] !== undefined) el.value = state[key];
+                });
+                const dist = document.getElementById('shootingDistance');
+                if (dist && snap.distance) dist.value = snap.distance;
+                if (state.exercises && state.exercises.length) {
+                    try { updateExerciseList(); } catch (e) { /* liste de config : non critique */ }
+                }
+
+                const finished = state.sequence.length > 0 && state.currentSequenceIndex >= state.sequence.length;
+                const isTeam = state.gameMode === 'team';
+
+                if (snap.kind === 'results' && !isTeam) {
+                    showOnlyScreen('sessionScreen');
+                    showResults();                       // le classement n'est pas réécrit (saveToLeaderboard neutralisé)
+                } else if (snap.kind === 'session' || snap.kind === 'recap' || snap.kind === 'results') {
+                    if (finished || snap.kind === 'results') {
+                        if (isTeam) {
+                            // Coureur déjà comptabilisé : on repart sur le relais (ou les résultats finaux)
+                            state.results = [];
+                            state.currentSequenceIndex = 0;
+                            const allDone = state.currentTeamIndex >= state.teams.length ||
+                                state.teams.every(function (t) { return t.completedRunners >= t.members.length; });
+                            if (allDone) {
+                                showOnlyScreen('sessionScreen');
+                                showTeamFinalResults();
+                            } else {
+                                showOnlyScreen('teamRelayScreen');
+                                updateTeamScoreboard();
+                                updateCurrentRunner();
+                            }
+                        } else {
+                            showOnlyScreen('sessionScreen');
+                            showResults();
+                        }
+                    } else {
+                        showOnlyScreen('sessionScreen');
+                        showRecap();
+                        if (snap.kind === 'session') startGlobalSession();
+                    }
+                } else if (snap.kind === 'relay') {
+                    showOnlyScreen('teamRelayScreen');
+                    updateTeamScoreboard();
+                    updateCurrentRunner();
+                } else {
+                    state.gameMode = 'solo';
+                    showOnlyScreen('infoScreen');
+                }
+                updatePendingObsUI();
+            } finally {
+                __restoringSession = false;
+            }
+        }
+
+        // Le classement ne doit pas être réécrit quand on réaffiche des résultats restaurés
+        (function () {
+            const origSave = saveToLeaderboard;
+            saveToLeaderboard = function (data) {
+                if (__restoringSession) return;
+                return origSave.apply(this, arguments);
+            };
+        })();
+
+        // Persistance après les transitions pilotées par des minuteurs
+        ['startSession', 'endWorkPhase', 'endRestPhase', 'showResults', 'completeCurrentRunner',
+         'newObservation', 'passRelayAutomatic', 'startCurrentRunner'].forEach(function (name) {
+            const fn = window[name];
+            if (typeof fn !== 'function') return;
+            window[name] = function () {
+                const r = fn.apply(this, arguments);
+                schedulePersist();
+                return r;
+            };
+        });
+        (function () {
+            const origReset = resetApp;
+            resetApp = function () {
+                const r = origReset.apply(this, arguments);
+                persistSession();          // écran initial + aucune observation => supprime la sauvegarde
+                return r;
+            };
+        })();
+
+        // Bouton Retour Android (appelé par MainActivity.kt)
+        //   'handled' : traité côté page (fenêtre fermée / ignoré)
+        //   'confirm' : travail en cours, l'app native demande confirmation avant de quitter
+        //   'exit'    : rien à perdre, on quitte
+        window.__androidBack = function () {
+            try {
+                const modals = document.querySelectorAll('.modal');
+                for (let i = 0; i < modals.length; i++) {
+                    const m = modals[i];
+                    if (m.classList.contains('hidden')) continue;
+                    if (m.id === 'adminModal') closeAdmin();
+                    else if (m.id === 'settingsModal') closeSettings();
+                    else if (m.id === 'aideModal') closeAide();
+                    else if (m.id === 'teamInfoModal') closeTeamInfoForm();
+                    else {
+                        // Fenêtres dynamiques : fermées seulement si leur croix ne fait que les retirer
+                        const btn = m.querySelector('.close-btn');
+                        if (btn && /remove\(\)/.test(btn.getAttribute('onclick') || '')) m.remove();
+                    }
+                    return 'handled';
+                }
+                persistSession();
+                if (currentScreenId() === 'initialModeScreen' && pendingRows.length === 0) return 'exit';
+                return 'confirm';
+            } catch (e) {
+                return 'exit';
+            }
+        };
+        window.__persistSession = persistSession;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            let snap = null;
+            try {
+                const raw = localStorage.getItem(SESSION_KEY);
+                if (raw) snap = JSON.parse(raw);
+            } catch (e) { snap = null; }
+
+            if (snap && snap.v === 1 && snap.kind) {
+                let accept = false;
+                try { accept = confirm(describeSnapshot(snap)); } catch (e) { accept = false; }
+                if (accept) {
+                    try {
+                        restoreSession(snap);
+                    } catch (e) {
+                        console.error('Restauration impossible:', e);
+                        showOnlyScreen('initialModeScreen');
+                        alert('La séance n\'a pas pu être restaurée entièrement. Les observations archivées sont conservées.');
+                    }
+                } else {
+                    try { localStorage.removeItem(SESSION_KEY); } catch (e) { /* ignore */ }
+                }
+            }
+
+            __persistEnabled = true;
+            persistSession();
+            ['click', 'input', 'change'].forEach(function (evt) {
+                document.addEventListener(evt, schedulePersist, true);
+            });
+            setInterval(persistSession, 15000);
+            document.addEventListener('visibilitychange', function () {
+                if (document.visibilityState === 'hidden') persistSession();
+            });
+            window.addEventListener('pagehide', persistSession);
+            window.addEventListener('beforeunload', persistSession);
+        });
+
+        // ============================================
+        // ACCESSIBILITÉ (lecteur d'écran TalkBack, clavier externe)
+        // ============================================
+        // Appliquée au chargement puis à tout ajout dynamique dans la page (fenêtres, listes...).
+        const A11Y_LABELS = [
+            ['incrementReps', 'Ajouter une répétition'],
+            ['decrementReps', 'Retirer une répétition'],
+            ['incrementHits', 'Ajouter un tir réussi'],
+            ['decrementHits', 'Retirer un tir réussi'],
+            ['moveAtelierUp', 'Monter cet atelier'],
+            ['moveAtelierDown', 'Descendre cet atelier'],
+            ['moveExerciseUp', 'Monter cet exercice'],
+            ['moveExerciseDown', 'Descendre cet exercice'],
+            ['removeExercise', 'Retirer cet exercice'],
+            ['removeMember', 'Retirer ce membre']
+        ];
+        let __a11yLastOutside = null;
+        // Mémorise le dernier élément activé hors fenêtre (focus clavier ou toucher)
+        ['focusin', 'click'].forEach(function (evt) {
+            document.addEventListener(evt, function (e) {
+                let t = e.target;
+                if (!t || !t.closest || t.closest('.modal')) return;
+                if (evt === 'click') t = t.closest('button, [role="button"]') || t;
+                __a11yLastOutside = t;
+            }, true);
+        });
+
+        function a11yLabelFor(el) {
+            const click = el.getAttribute('onclick') || '';
+            for (let i = 0; i < A11Y_LABELS.length; i++) {
+                if (click.indexOf(A11Y_LABELS[i][0]) >= 0) return A11Y_LABELS[i][1];
+            }
+            if (el.classList.contains('close-btn')) return 'Fermer';
+            if (el.classList.contains('settings-btn')) return 'Réglages';
+            return null;
+        }
+
+        function enhanceA11y(root) {
+            if (!root || root.nodeType !== 1) return;
+            const all = [root].concat([].slice.call(root.querySelectorAll('*')));
+            all.forEach(function (el) {
+                const tag = el.tagName;
+                if (tag === 'BUTTON') {
+                    if (!el.hasAttribute('aria-label')) {
+                        const label = a11yLabelFor(el);
+                        if (label) el.setAttribute('aria-label', label);
+                    }
+                } else if (el.hasAttribute('onclick') && tag !== 'INPUT' && tag !== 'SELECT' && tag !== 'A' && tag !== 'TEXTAREA') {
+                    // Zones cliquables (ex : choix du mode) : atteignables et activables au clavier
+                    if (!el.hasAttribute('role')) el.setAttribute('role', 'button');
+                    if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+                }
+                if (el.classList && el.classList.contains('modal') && !el.hasAttribute('role')) {
+                    el.setAttribute('role', 'dialog');
+                    el.setAttribute('aria-modal', 'true');
+                    const h = el.querySelector('.modal-header h2, h2');
+                    if (h) el.setAttribute('aria-label', h.textContent.replace(/\s+/g, ' ').trim());
+                    const content = el.querySelector('.modal-content');
+                    if (content && !content.hasAttribute('tabindex')) content.setAttribute('tabindex', '-1');
+                }
+            });
+        }
+
+        // Annonce vocale discrète (région aria-live)
+        function announce(msg) {
+            const live = document.getElementById('a11yLive');
+            if (!live) return;
+            live.textContent = '';
+            setTimeout(function () { live.textContent = msg; }, 50);
+        }
+
+        // Focus : on entre dans une fenêtre à son ouverture, on revient à l'élément d'origine à sa fermeture
+        function a11yModalOpened(modal) {
+            if (modal.__a11yOpen) return;
+            modal.__a11yOpen = true;
+            // Élément à retrouver à la fermeture : le dernier focus HORS fenêtre (le focus peut déjà
+            // être dans la fenêtre quand l'observateur s'exécute)
+            const act = document.activeElement;
+            modal.__a11yPrev = (act && !modal.contains(act) && !(act.closest && act.closest('.modal'))) ? act : __a11yLastOutside;
+            const content = modal.querySelector('.modal-content');
+            const field = modal.querySelector('input:not([disabled]), select, textarea');
+            const target = (document.activeElement && modal.contains(document.activeElement)) ? null : (field || content);
+            if (target && target.focus) { try { target.focus(); } catch (e) { /* ignore */ } }
+        }
+        function a11yModalClosed(modal) {
+            if (!modal.__a11yOpen) return;
+            modal.__a11yOpen = false;
+            const prev = modal.__a11yPrev;
+            modal.__a11yPrev = null;
+            if (prev && prev.focus && document.body.contains(prev)) { try { prev.focus(); } catch (e) { /* ignore */ } }
+        }
+
+        // Annonces de la séance : phase (exercice / pause) et atelier courant
+        (function () {
+            const origPhase = updateTabataPhase;
+            updateTabataPhase = function (text, className) {
+                const r = origPhase.apply(this, arguments);
+                if (text !== __lastPhaseAnnounced) {
+                    __lastPhaseAnnounced = text;
+                    const progress = document.getElementById('atelierProgress');
+                    const name = document.getElementById('currentAtelierName');
+                    announce(text + (name && name.textContent ? ' - ' + name.textContent : '') +
+                        (progress && progress.textContent ? ', ' + progress.textContent : ''));
+                }
+                return r;
+            };
+        })();
+        let __lastPhaseAnnounced = '';
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Région d'annonces + rôles des compteurs et chronos
+            const live = document.createElement('div');
+            live.id = 'a11yLive';
+            live.className = 'sr-only';
+            live.setAttribute('role', 'status');
+            live.setAttribute('aria-live', 'polite');
+            document.body.appendChild(live);
+
+            ['repCounter', 'hitsCounter'].forEach(function (id) {
+                const el = document.getElementById(id);
+                if (el) { el.setAttribute('aria-live', 'polite'); el.setAttribute('aria-atomic', 'true'); }
+            });
+            ['tabataDisplay', 'tabataDisplay2', 'totalTimeDisplay'].forEach(function (id) {
+                const el = document.getElementById(id);
+                if (el) el.setAttribute('role', 'timer');
+            });
+
+            enhanceA11y(document.body);
+            document.querySelectorAll('.modal').forEach(function (m) {
+                if (!m.classList.contains('hidden')) a11yModalOpened(m);
+            });
+
+            if (window.MutationObserver) {
+                new MutationObserver(function (mutations) {
+                    mutations.forEach(function (m) {
+                        if (m.type === 'childList') {
+                            m.addedNodes.forEach(function (n) {
+                                if (n.nodeType !== 1) return;
+                                enhanceA11y(n);
+                                if (n.classList.contains('modal') && !n.classList.contains('hidden')) a11yModalOpened(n);
+                            });
+                            m.removedNodes.forEach(function (n) {
+                                if (n.nodeType === 1 && n.classList.contains('modal')) {
+                                    const prev = n.__a11yPrev;
+                                    n.__a11yOpen = false;
+                                    if (prev && prev.focus && document.body.contains(prev)) { try { prev.focus(); } catch (e) { /* ignore */ } }
+                                }
+                            });
+                        } else if (m.type === 'attributes' && m.target.classList && m.target.classList.contains('modal')) {
+                            if (m.target.classList.contains('hidden')) a11yModalClosed(m.target);
+                            else a11yModalOpened(m.target);
+                        }
+                    });
+                }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+            }
+
+            // Clavier externe : Entrée / Espace sur une zone cliquable, Échap pour fermer une fenêtre
+            document.addEventListener('keydown', function (e) {
+                const t = e.target;
+                if ((e.key === 'Enter' || e.key === ' ') && t && t.getAttribute && t.getAttribute('role') === 'button' && t.tagName !== 'BUTTON') {
+                    e.preventDefault();
+                    t.click();
+                } else if (e.key === 'Escape' && document.querySelector('.modal:not(.hidden)')) {
+                    e.preventDefault();
+                    window.__androidBack();
+                }
+            });
+        });
     </script>
     <!-- Modal Configuration Avancée (Admin) — hors du container pour z-index correct -->
     <div id="adminModal" class="modal hidden">
@@ -5895,6 +7004,27 @@
                     </p>
                     <div id="adminBaremesContainer"></div>
 
+                    <h3 style="color: var(--secondary); margin: 25px 0 10px;">➕ Ajouter un exercice</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 10px;">
+                        Un exercice ajouté apparaît dans le menu de choix des exercices. Pour masquer un exercice du menu,
+                        décochez « Afficher dans le menu » dans sa fiche ci-dessus puis enregistrez.
+                    </p>
+                    <button type="button" class="btn-admin-save" id="adminAddExToggle" onclick="toggleAdminAddExercise()">➕ Nouvel exercice…</button>
+                    <div id="adminAddExercise" class="admin-new-ex" style="display: none;">
+                        <label for="adminNewExName">Nom de l'exercice *</label>
+                        <input type="text" id="adminNewExName" maxlength="40" autocomplete="off" placeholder="Ex : GAINAGE LATÉRAL">
+                        <label for="adminNewExDesc">Description (facultatif : consigne et précision dans le menu)</label>
+                        <input type="text" id="adminNewExDesc" maxlength="60" autocomplete="off" placeholder="Ex : planche sur le côté, jambes tendues">
+                        <label>Barème (pour 45 s, adapté automatiquement à la durée choisie)</label>
+                        <div class="admin-new-row" aria-hidden="true" style="margin-bottom: 2px;">
+                            <span></span><span style="text-align: center;">Rép. min.</span><span style="text-align: center;">Points</span><span></span>
+                        </div>
+                        <div id="adminNewExPaliers"></div>
+                        <button type="button" class="btn-admin-reset" style="margin-top: 6px;" onclick="addAdminPalier()">+ Ajouter un palier</button>
+                        <p id="adminNewExError" role="alert"></p>
+                        <button type="button" class="btn-admin-save" onclick="submitAdminNewExercise()">✅ Ajouter cet exercice</button>
+                    </div>
+
                     <h3 style="color: var(--secondary); margin: 25px 0 15px;">🎯 Points de tir</h3>
                     <div id="adminShootingContainer"></div>
 
@@ -5903,6 +7033,18 @@
                     </button>
                     <button class="btn-admin-reset" onclick="resetToDefaults()">
                         🔄 Réinitialiser aux valeurs par défaut
+                    </button>
+
+                    <h3 style="color: var(--secondary); margin: 25px 0 10px;">🔑 Mot de passe professeur</h3>
+                    <p id="adminDefaultPwdNotice" style="display: none; font-size: 0.85rem; color: var(--warning); margin-bottom: 10px;">
+                        ⚠️ Le mot de passe initial est encore actif. Pensez à le changer.
+                    </p>
+                    <input type="password" id="adminNewPwd" placeholder="Nouveau mot de passe (6 caractères min.)" autocomplete="off"
+                           style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid rgba(255,255,255,0.15); border-radius: 10px; background: rgba(255,255,255,0.05); color: var(--text); font-size: 1rem;">
+                    <input type="password" id="adminNewPwd2" placeholder="Confirmer le mot de passe" autocomplete="off"
+                           style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid rgba(255,255,255,0.15); border-radius: 10px; background: rgba(255,255,255,0.05); color: var(--text); font-size: 1rem;">
+                    <button class="btn-admin-save" onclick="changeAdminPwd()">
+                        🔑 Changer le mot de passe
                     </button>
                 </div>
             </div>
