@@ -1867,8 +1867,8 @@
                     
                     <div class="mode-option" style="grid-column: 1 / -1;" onclick="openClassRanking()">
                         <div class="mode-icon">🏁</div>
-                        <div class="mode-name">Classement des équipes</div>
-                        <div class="mode-desc">Tablette enseignant : saisir les scores annoncés par les observateurs</div>
+                        <div class="mode-name">Gestion du mode équipes</div>
+                        <div class="mode-desc">Tablette enseignant : choisir les équipes et leurs couleurs, puis classer les scores</div>
                     </div>
                 </div>
             </div>
@@ -1921,21 +1921,30 @@
                 <h2 class="card-title">⚙️ Configuration des équipes</h2>
                 
                 <div class="form-group">
-                    <label>Nombre d'équipes</label>
-                    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
-                        <button class="btn btn-secondary" onclick="setTeamCount(1)" id="teamCount1" style="min-width: 60px;">1</button>
-                        <button class="btn btn-secondary" onclick="setTeamCount(2)" id="teamCount2" style="min-width: 60px;">2</button>
-                        <button class="btn btn-secondary" onclick="setTeamCount(3)" id="teamCount3" style="min-width: 60px;">3</button>
-                        <button class="btn btn-secondary" onclick="setTeamCount(4)" id="teamCount4" style="min-width: 60px;">4</button>
+                    <label>Comment observer ?</label>
+                    <div class="mode-selector" style="margin: 12px 0 0 0; gap: 12px;">
+                        <div class="mode-option" id="obsModeSingle" role="button" tabindex="0" onclick="setTeamObsMode('single')" style="padding: 18px 12px;">
+                            <div class="mode-icon">📱</div>
+                            <div class="mode-name" style="font-size: 1.05rem;">Une équipe par tablette</div>
+                            <div class="mode-desc">Chaque tablette observe UNE équipe. Toutes les équipes courent en même temps (jusqu'à 8 tablettes). <strong>Mode conseillé.</strong></div>
+                        </div>
+                        <div class="mode-option" id="obsModeMulti" role="button" tabindex="0" onclick="setTeamObsMode('multi')" style="padding: 18px 12px;">
+                            <div class="mode-icon">📲</div>
+                            <div class="mode-name" style="font-size: 1.05rem;">Plusieurs équipes sur cette tablette</div>
+                            <div class="mode-desc">Les équipes passent l'une après l'autre sur cette seule tablette (2 à 4 équipes).</div>
+                        </div>
                     </div>
-                    <div style="margin-top: 15px; padding: 15px; background: rgba(0, 255, 204, 0.1); border-radius: 8px; border-left: 4px solid var(--secondary);">
-                        <p style="font-size: 0.95rem; color: var(--text); margin: 0; line-height: 1.5;">
-                            💡 <strong>Mode multi-tablettes (1 équipe) :</strong><br>
-                            Chaque équipe utilise sa propre tablette avec un observateur dédié.<br>
-                            Toutes les équipes courent <strong>en même temps</strong> → Gain de temps considérable !<br>
-                            Comparez ensuite les CSV pour déterminer l'équipe gagnante. 🏆
-                        </p>
+
+                    <div id="teamCountRow" style="display: none; margin-top: 15px;">
+                        <label>Nombre d'équipes sur cette tablette</label>
+                        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
+                            <button class="btn btn-secondary" onclick="setTeamCount(2)" id="teamCount2" style="min-width: 60px;">2</button>
+                            <button class="btn btn-secondary" onclick="setTeamCount(3)" id="teamCount3" style="min-width: 60px;">3</button>
+                            <button class="btn btn-secondary" onclick="setTeamCount(4)" id="teamCount4" style="min-width: 60px;">4</button>
+                        </div>
                     </div>
+
+                    <div id="obsModeHint" style="margin-top: 15px; padding: 15px; background: rgba(0, 255, 204, 0.1); border-radius: 8px; border-left: 4px solid var(--secondary);"></div>
                 </div>
                 
                 <div id="teamsContainer" style="margin-top: 30px;"></div>
@@ -5158,7 +5167,7 @@
             } else {
                 // Mode équipe : aller directement à la config des équipes
                 document.getElementById('teamSetupScreen').classList.remove('hidden');
-                setTeamCount(1); // Par défaut 1 équipe
+                setTeamObsMode('single'); // Par défaut : une équipe par tablette
             }
         }
         
@@ -5209,21 +5218,38 @@
         // MODE ÉQUIPE - CONFIGURATION
         // ============================================
         
+        let teamObsMode = 'single';
+
+        function setTeamObsMode(mode) {
+            teamObsMode = mode === 'multi' ? 'multi' : 'single';
+            const single = teamObsMode === 'single';
+
+            const styleCard = (el, active) => {
+                if (!el) return;
+                el.style.borderColor = active ? 'var(--secondary)' : 'rgba(255, 255, 255, 0.1)';
+                el.style.background = active ? 'rgba(0, 255, 204, 0.15)' : 'rgba(255, 255, 255, 0.03)';
+            };
+            styleCard(document.getElementById('obsModeSingle'), single);
+            styleCard(document.getElementById('obsModeMulti'), !single);
+
+            document.getElementById('teamCountRow').style.display = single ? 'none' : 'block';
+            document.getElementById('obsModeHint').innerHTML = single
+                ? '<strong>Une équipe par tablette</strong><br>1. Choisissez la <strong>couleur attribuée par l\'enseignant</strong> : ne la changez plus ensuite, elle identifie votre équipe dans le classement.<br>2. Le <strong>nom</strong> de l\'équipe peut être modifié librement.<br>3. À la fin, la tablette affiche un QR à faire scanner par l\'enseignant.'
+                : '<strong>Plusieurs équipes sur cette tablette</strong><br>Les équipes courent à tour de rôle : tous les coureurs de la première équipe, puis ceux de la suivante. Un seul observateur suffit.';
+
+            setTeamCount(single ? 1 : Math.max(2, Math.min(4, state.teams.length || 2)));
+        }
+
         function setTeamCount(count) {
-            // Désactiver tous les boutons
-            for (let i = 1; i <= 4; i++) {
+            // Mettre en évidence le bouton choisi (2 à 4)
+            for (let i = 2; i <= 4; i++) {
                 const btn = document.getElementById(`teamCount${i}`);
-                if (btn) {
-                    btn.style.background = 'rgba(255, 255, 255, 0.1)';
-                    btn.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                }
+                if (!btn) continue;
+                const on = i === count;
+                btn.style.background = on ? 'var(--secondary)' : 'rgba(255, 255, 255, 0.1)';
+                btn.style.borderColor = on ? 'var(--secondary)' : 'rgba(255, 255, 255, 0.3)';
+                btn.style.color = on ? 'var(--bg-dark)' : '';
             }
-            
-            // Activer le bouton sélectionné
-            const activeBtn = document.getElementById(`teamCount${count}`);
-            activeBtn.style.background = 'var(--secondary)';
-            activeBtn.style.borderColor = 'var(--secondary)';
-            activeBtn.style.color = 'var(--bg-dark)';
             
             // Initialiser les équipes
             state.teams = [];
@@ -5268,15 +5294,18 @@
                     teamNameHTML = `
                         <div style="margin-bottom: 20px; padding: 15px; background: rgba(0, 255, 204, 0.1); border-radius: 8px; border-left: 4px solid var(--secondary);">
                             <label style="display: block; font-weight: 600; margin-bottom: 10px; color: var(--text);">
-                                🏷️ Nom de l'équipe (personnalisable)
+                                🏷️ Nom de l'équipe (modifiable)
                             </label>
                             <input type="text" id="teamName-${teamIndex}" value="${esc(team.name)}" 
                                    onchange="updateTeamName(${teamIndex}, this.value)"
                                    style="width: 100%; padding: 10px; background: rgba(255, 255, 255, 0.1); border: 2px solid ${team.border}; border-radius: 8px; color: var(--text); font-size: 1.1rem; font-weight: 600;">
                             
-                            <label style="display: block; font-weight: 600; margin-top: 15px; margin-bottom: 10px; color: var(--text);">
-                                🎨 Couleur de l'équipe
+                            <label style="display: block; font-weight: 600; margin-top: 15px; margin-bottom: 6px; color: var(--text);">
+                                🎨 Couleur attribuée : ${team.emoji} ${TEAM_COLORS[team.id] ? TEAM_COLORS[team.id].name : ''}
                             </label>
+                            <p style="margin: 0 0 10px 0; font-size: 0.9rem; color: var(--tertiary); line-height: 1.4;">
+                                ⚠️ Choisissez la couleur donnée par l'enseignant, puis <strong>ne la changez plus</strong> : elle identifie votre équipe. Seul le nom est modifiable.
+                            </p>
                             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                                 ${TEAM_COLORS.map((color, idx) => `
                                     <button onclick="changeTeamColor(${teamIndex}, ${idx})" 
@@ -6177,8 +6206,12 @@
             try { s = JSON.parse(localStorage.getItem(RANKING_KEY) || 'null'); } catch (e) { s = null; }
             if (!s || !Array.isArray(s.rows)) s = { mode: 'total', rows: [] };
             if (s.mode !== 'avg') s.mode = 'total';
-            s.rows = s.rows.filter(r => r && TEAM_COLORS[r.c]);
+            s.rows = s.rows.filter(r => r && TEAM_COLORS[r.c]).slice(0, TEAM_COLORS.length);
             if (s.rows.length === 0) s.rows = [0, 1, 2, 3].map(c => ({ c: c, total: '', n: '' }));
+            while (s.rows.length < 2) {
+                const used = s.rows.map(r => Number(r.c));
+                s.rows.push({ c: TEAM_COLORS.findIndex((_, k) => used.indexOf(k) === -1), total: '', n: '' });
+            }
             return s;
         }
 
@@ -6201,18 +6234,17 @@
             modal.innerHTML = `
                 <div class="modal-content" style="max-width: 640px;">
                     <div class="modal-header">
-                        <h2>🏁 Classement des équipes</h2>
+                        <h2>👥 Gestion du mode équipes</h2>
                         <button class="close-btn" aria-label="Fermer" onclick="document.getElementById('rankingModal').remove()">✕</button>
                     </div>
                     <div class="modal-body">
+                        <div id="rankingCountBar"></div>
                         <div id="rankingModeBar"></div>
                         <div id="rankingRows"></div>
                         <button class="btn btn-primary btn-full" onclick="startRankingScan()" style="margin-bottom: 12px;">
                             <span>📷 Scanner les QR des équipes</span>
                         </button>
-                        <button class="btn btn-secondary btn-full" id="rankingAddBtn" onclick="rankingAddRow()" style="margin-bottom: 20px;">
-                            <span>+ Ajouter une équipe</span>
-                        </button>
+                        <div style="margin-bottom: 20px;"></div>
                         <div id="rankingResult"></div>
                     </div>
                     <div class="modal-footer">
@@ -6243,25 +6275,40 @@
                 </p>
             `;
 
+            // Nombre d'équipes qui s'affrontent (2 à 8) : une ligne par équipe
+            let countBtns = '';
+            for (let n = 2; n <= TEAM_COLORS.length; n++) {
+                countBtns += `<button aria-label="${n} équipes" style="${btnStyle(s.rows.length === n)} min-width: 48px; flex: 0 0 auto; padding: 10px 14px;" onclick="rankingSetCount(${n})">${n}</button>`;
+            }
+            const inGame = s.rows.map(r => TEAM_COLORS[r.c].emoji + ' ' + TEAM_COLORS[r.c].name).join('  •  ');
+            document.getElementById('rankingCountBar').innerHTML = `
+                <div style="margin-bottom: 8px; font-weight: 700;">Nombre d'équipes qui s'affrontent</div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">${countBtns}</div>
+                <div style="margin: 14px 0 20px 0; padding: 12px; background: rgba(0, 255, 204, 0.1); border-left: 4px solid var(--secondary); border-radius: 8px; font-size: 0.95rem; line-height: 1.5;">
+                    <strong>Couleurs en jeu :</strong> ${inGame}<br>
+                    <span style="color: var(--text-dim); font-size: 0.85rem;">Donnez une couleur à chaque tablette : les élèves ouvrent le mode équipe (une équipe par tablette) et choisissent la couleur attribuée.</span>
+                </div>
+            `;
+
             const inputStyle = 'min-height: 48px; padding: 8px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; color: var(--text); font-size: 1.1rem; width: 100%; box-sizing: border-box;';
             let rowsHTML = `
                 <div style="display: flex; gap: 8px; margin-bottom: 4px; font-size: 0.8rem; color: var(--text-dim);">
-                    <span style="flex: 2;">Équipe</span><span style="flex: 1;">Total (pts)</span><span style="flex: 1;">Passages</span><span style="width: 48px;"></span>
+                    <span style="flex: 2;">Équipe (couleur)</span><span style="flex: 1;">Total (pts)</span><span style="flex: 1;">Passages</span>
                 </div>`;
+            const usedColors = s.rows.map(r => Number(r.c));
             s.rows.forEach((r, i) => {
-                const opts = TEAM_COLORS.map((c, ci) => `<option value="${ci}"${ci === Number(r.c) ? ' selected' : ''}>${c.emoji} ${c.name}</option>`).join('');
+                const opts = TEAM_COLORS.map((c, ci) => {
+                    const takenByOther = ci !== Number(r.c) && usedColors.indexOf(ci) !== -1;
+                    return `<option value="${ci}"${ci === Number(r.c) ? ' selected' : ''}${takenByOther ? ' disabled' : ''}>${c.emoji} ${c.name}</option>`;
+                }).join('');
                 rowsHTML += `
                     <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px;">
-                        <select aria-label="Couleur de l'équipe" onchange="rankingSet(${i}, 'c', this.value)" style="${inputStyle} flex: 2; width: auto; min-width: 0;">${opts}</select>
-                        <input type="number" inputmode="numeric" min="0" aria-label="Score total" placeholder="ex : 412" value="${esc(r.total)}" oninput="rankingSet(${i}, 'total', this.value)" style="${inputStyle} flex: 1; width: auto; min-width: 0;">
-                        <input type="number" inputmode="numeric" min="1" aria-label="Nombre de passages" placeholder="ex : 6" value="${esc(r.n)}" oninput="rankingSet(${i}, 'n', this.value)" style="${inputStyle} flex: 1; width: auto; min-width: 0;">
-                        <button aria-label="Retirer cette équipe" onclick="rankingRemoveRow(${i})" style="width: 48px; min-height: 48px; flex-shrink: 0; background: var(--danger); border: none; color: white; border-radius: 8px; cursor: pointer; font-size: 1.1rem;">✕</button>
+                        <select aria-label="Couleur de l'équipe ${i + 1}" onchange="rankingSet(${i}, 'c', this.value)" style="${inputStyle} flex: 2; width: auto; min-width: 0;">${opts}</select>
+                        <input type="number" inputmode="numeric" min="0" aria-label="Score total, équipe ${i + 1}" placeholder="ex : 412" value="${esc(r.total)}" oninput="rankingSet(${i}, 'total', this.value)" style="${inputStyle} flex: 1; width: auto; min-width: 0;">
+                        <input type="number" inputmode="numeric" min="1" aria-label="Nombre de passages, équipe ${i + 1}" placeholder="ex : 6" value="${esc(r.n)}" oninput="rankingSet(${i}, 'n', this.value)" style="${inputStyle} flex: 1; width: auto; min-width: 0;">
                     </div>`;
             });
             document.getElementById('rankingRows').innerHTML = rowsHTML;
-
-            const addBtn = document.getElementById('rankingAddBtn');
-            if (addBtn) addBtn.style.display = s.rows.length >= TEAM_COLORS.length ? 'none' : '';
 
             renderRankingResult();
         }
@@ -6351,19 +6398,8 @@
         }
 
         function applyScannedTeam(t) {
-            const rows = rankingState.rows;
-            let row = rows.find(r => Number(r.c) === t.c);
-            if (!row) {
-                row = rows.find(r => r.total === '' && r.n === '');
-                if (row) {
-                    row.c = t.c;
-                } else if (rows.length < TEAM_COLORS.length) {
-                    row = { c: t.c, total: '', n: '' };
-                    rows.push(row);
-                } else {
-                    return false;
-                }
-            }
+            const row = rankingState.rows.find(r => Number(r.c) === t.c);
+            if (!row) return { unknown: true };
             const changed = row.total !== '' && (row.total !== String(t.total) || row.n !== String(t.n));
             const previous = row.total;
             row.total = String(t.total);
@@ -6372,7 +6408,7 @@
             row.cls = t.cls || '';
             saveRankingState();
             renderRankingAll();
-            return changed ? { replaced: previous } : { replaced: null };
+            return { replaced: changed ? previous : null };
         }
 
         function stopScanStream() {
@@ -6458,7 +6494,11 @@
                         if (!t) {
                             status.style.color = 'var(--tertiary)';
                             status.textContent = '⚠️ Ce QR n\'est pas un QR d\'équipe LaserFit.';
-                        } else if (res = applyScannedTeam(t)) {
+                        } else if ((res = applyScannedTeam(t)) && res.unknown) {
+                            const col = TEAM_COLORS[t.c];
+                            status.style.color = 'var(--tertiary)';
+                            status.textContent = '⚠️ La couleur ' + col.emoji + ' ' + col.name + ' n\'est pas dans la liste des équipes. Vérifiez la couleur de la tablette ou la liste.';
+                        } else if (res) {
                             const col = TEAM_COLORS[t.c];
                             status.style.color = res.replaced !== null ? 'var(--tertiary)' : 'var(--success)';
                             status.textContent = (res.replaced !== null ? '⚠️ Remplace l\'ancien score (' + res.replaced + ' pts) de cette couleur : ' : '✅ ')
@@ -6482,7 +6522,7 @@
             rankingState.rows[i][field] = field === 'c' ? Number(value) : value;
             if (field === 'c') { rankingState.rows[i].name = ''; rankingState.rows[i].cls = ''; }
             saveRankingState();
-            renderRankingResult();
+            if (field === 'c') renderRankingAll(); else renderRankingResult();
         }
 
         function rankingSetMode(mode) {
@@ -6491,24 +6531,29 @@
             renderRankingAll();
         }
 
-        function rankingAddRow() {
-            const used = rankingState.rows.map(r => Number(r.c));
-            let c = TEAM_COLORS.findIndex((_, idx) => used.indexOf(idx) === -1);
-            if (c === -1) return;
-            rankingState.rows.push({ c: c, total: '', n: '' });
-            saveRankingState();
-            renderRankingAll();
-        }
-
-        function rankingRemoveRow(i) {
-            rankingState.rows.splice(i, 1);
+        function rankingSetCount(n) {
+            const rows = rankingState.rows;
+            if (n === rows.length) return;
+            if (n < rows.length) {
+                const dropped = rows.slice(n);
+                if (dropped.some(r => r.total !== '' || r.n !== '')) {
+                    if (!confirm('Retirer ' + dropped.length + ' équipe(s) et leurs scores saisis ?')) return;
+                }
+                rows.length = n;
+            } else {
+                while (rows.length < n) {
+                    const used = rows.map(r => Number(r.c));
+                    rows.push({ c: TEAM_COLORS.findIndex((_, k) => used.indexOf(k) === -1), total: '', n: '' });
+                }
+            }
             saveRankingState();
             renderRankingAll();
         }
 
         function rankingClear() {
-            if (!confirm('Effacer tous les scores saisis ?')) return;
-            rankingState.rows = [0, 1, 2, 3].map(c => ({ c: c, total: '', n: '' }));
+            if (!confirm('Effacer les scores saisis (les équipes et couleurs sont conservées) ?')) return;
+            // On garde les équipes et leurs couleurs, on efface seulement les scores
+            rankingState.rows.forEach(r => { r.total = ''; r.n = ''; r.name = ''; r.cls = ''; });
             saveRankingState();
             renderRankingAll();
         }
@@ -7464,8 +7509,8 @@
                 <ul>
                     <li><strong>Mode Solo :</strong> un pratiquant réalise un circuit d'exercices de fitness alternés avec des tirs de précision laser. Un observateur/coach compte les répétitions.</li>
                     <li><strong>Mode Équipe :</strong> plusieurs équipes s'affrontent en relais. Chaque coureur enchaîne exercices et tirs, puis passe au suivant.</li>
-                    <li><strong>Plusieurs tablettes, une équipe par tablette :</strong> choisissez « 1 » équipe sur chaque tablette. À la fin, la tablette affiche en grand le total et la moyenne de l'équipe : l'observateur les annonce.</li>
-                    <li><strong>Classement des équipes :</strong> sur la tablette de l'enseignant, bouton « Classement des équipes » à l'écran d'accueil. Scannez le QR affiché en fin de relais sur chaque tablette d'équipe (bouton « Scanner »), ou saisissez le total et le nombre de passages à la main. Chaque tablette doit avoir une couleur différente (jusqu'à 8 équipes). Choisissez ensuite le calcul : total des points ou moyenne par passage (équitable si les équipes n'ont pas le même nombre de passages).</li>
+                    <li><strong>Une équipe par tablette :</strong> choisissez « Une équipe par tablette » sur chaque tablette. À la fin, la tablette affiche en grand le total et la moyenne de l'équipe : l'observateur les annonce.</li>
+                    <li><strong>Gestion du mode équipes :</strong> sur la tablette de l'enseignant (bouton à l'écran d'accueil). Choisissez le nombre d'équipes qui s'affrontent (2 à 8) et la couleur de chacune : donnez une couleur à chaque tablette. Les élèves ouvrent le mode équipe, choisissent la couleur attribuée (à ne plus changer) et peuvent renommer l'équipe. En fin de relais, scannez le QR de chaque tablette (bouton « Scanner ») ou saisissez le total et les passages à la main, puis choisissez le calcul : total des points ou moyenne par passage (équitable si les équipes n'ont pas le même nombre de passages).</li>
                     <li><strong>Exercices :</strong> 14 exercices proposés (jumping jacks, 1/2 burpees, 1/2 squats, pompes inclinées, planches militaires, step ups, etc.), classés par ordre alphabétique. Le professeur peut en ajouter ou en masquer. Les barèmes s'adaptent à la durée choisie.</li>
                     <li><strong>Tirs laser :</strong> tirs à 3 m, 5 m ou 8 m. Le coach valide chaque tir réussi, les points par tir sont réglables par le professeur.</li>
                     <li><strong>Résultats :</strong> score total, détail par exercice, badges de performance, graphique de progression des tirs.</li>
