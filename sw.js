@@ -1,5 +1,5 @@
 // Service Worker Laser Fit - Version optimisée pour PWA Builder
-const CACHE_NAME = "laserfit-v16";
+const CACHE_NAME = "laserfit-v17";
 
 // Liste complète des assets - tous les fichiers existent
 const ASSETS = [
@@ -28,18 +28,18 @@ const ASSETS = [
 
 // INSTALL - Mise en cache avec gestion d'erreurs robuste
 self.addEventListener("install", (event) => {
-  console.log('[SW v16] 🔧 Installation...');
+  console.log('[SW v17] 🔧 Installation...');
   
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('[SW v16] 📦 Ouverture du cache:', CACHE_NAME);
+        console.log('[SW v17] 📦 Ouverture du cache:', CACHE_NAME);
         
         // Stratégie robuste : mise en cache individuelle avec gestion d'erreurs
         return Promise.all(
           ASSETS.map((url) => {
             return cache.add(url).catch((error) => {
-              console.warn('[SW v16] ⚠️ Échec mise en cache de:', url, error);
+              console.warn('[SW v17] ⚠️ Échec mise en cache de:', url, error);
               // Continue même si un fichier échoue
               return Promise.resolve();
             });
@@ -47,11 +47,11 @@ self.addEventListener("install", (event) => {
         );
       })
       .then(() => {
-        console.log('[SW v16] ✅ Installation terminée');
+        console.log('[SW v17] ✅ Installation terminée');
         return self.skipWaiting(); // Active immédiatement
       })
       .catch((error) => {
-        console.error('[SW v16] ❌ Erreur installation:', error);
+        console.error('[SW v17] ❌ Erreur installation:', error);
         throw error;
       })
   );
@@ -59,7 +59,7 @@ self.addEventListener("install", (event) => {
 
 // ACTIVATE - Nettoyage des anciens caches
 self.addEventListener("activate", (event) => {
-  console.log('[SW v16] 🔄 Activation...');
+  console.log('[SW v17] 🔄 Activation...');
   
   event.waitUntil(
     caches.keys()
@@ -67,18 +67,18 @@ self.addEventListener("activate", (event) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
             if (cacheName !== CACHE_NAME) {
-              console.log('[SW v16] 🗑️ Suppression ancien cache:', cacheName);
+              console.log('[SW v17] 🗑️ Suppression ancien cache:', cacheName);
               return caches.delete(cacheName);
             }
           })
         );
       })
       .then(() => {
-        console.log('[SW v16] ✅ Activation terminée');
+        console.log('[SW v17] ✅ Activation terminée');
         return self.clients.claim(); // Prend contrôle immédiatement
       })
       .catch((error) => {
-        console.error('[SW v16] ❌ Erreur activation:', error);
+        console.error('[SW v17] ❌ Erreur activation:', error);
       })
   );
 });
@@ -118,13 +118,13 @@ self.addEventListener("fetch", (event) => {
                 cache.put(event.request, responseToCache);
               })
               .catch((error) => {
-                console.warn('[SW v16] ⚠️ Échec mise en cache dynamique:', error);
+                console.warn('[SW v17] ⚠️ Échec mise en cache dynamique:', error);
               });
             
             return networkResponse;
           })
           .catch((error) => {
-            console.error('[SW v16] ❌ Erreur fetch:', event.request.url, error);
+            console.error('[SW v17] ❌ Erreur fetch:', event.request.url, error);
             
             // Fallback : retourner une réponse par défaut si nécessaire
             // (pour l'instant, propager l'erreur)
@@ -137,9 +137,9 @@ self.addEventListener("fetch", (event) => {
 // MESSAGE - Permet de forcer la mise à jour du SW
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
-    console.log('[SW v16] ⚡ Activation forcée');
+    console.log('[SW v17] ⚡ Activation forcée');
     self.skipWaiting();
   }
 });
 
-console.log('[SW v16] 🚀 Service Worker chargé');
+console.log('[SW v17] 🚀 Service Worker chargé');

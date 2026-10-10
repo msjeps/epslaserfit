@@ -7061,21 +7061,34 @@
             <div class="modal-body aide-section">
                 <h4>🎮 Fonctionnalités de l'application</h4>
                 <ul>
-                    <li><strong>Mode Solo :</strong> Un pratiquant réalise un circuit d'exercices fitness alternés avec des tirs de précision laser. Un observateur/coach compte les répétitions.</li>
-                    <li><strong>Mode Équipe :</strong> Plusieurs équipes s'affrontent en relais. Chaque coureur enchaîne exercices et tirs, puis passe au suivant.</li>
-                    <li><strong>Exercices :</strong> 14 exercices disponibles (jumping jacks, burpees, squats, pompes, etc.) avec barèmes adaptés à la durée choisie.</li>
-                    <li><strong>Tirs laser :</strong> Tirs à 3m (5 pts), 5m (10 pts) ou 8m (20 pts) — le coach valide chaque tir réussi.</li>
-                    <li><strong>Résultats :</strong> Score total, détail par exercice, badges de performance, graphique de progression des tirs.</li>
-                    <li><strong>Classement :</strong> Classement de la classe sauvegardé localement sur la tablette.</li>
-                    <li><strong>Export :</strong> Téléchargement CSV (compatible Excel) et QR Code pour partage rapide.</li>
-                    <li><strong>Nouvelle observation :</strong> Un dispensé peut observer jusqu'à 5 pratiquants différents sans reconfigurer la séance.</li>
+                    <li><strong>Mode Solo :</strong> un pratiquant réalise un circuit d'exercices de fitness alternés avec des tirs de précision laser. Un observateur/coach compte les répétitions.</li>
+                    <li><strong>Mode Équipe :</strong> plusieurs équipes s'affrontent en relais. Chaque coureur enchaîne exercices et tirs, puis passe au suivant.</li>
+                    <li><strong>Exercices :</strong> 14 exercices proposés (jumping jacks, 1/2 burpees, 1/2 squats, pompes inclinées, planches militaires, step ups, etc.), classés par ordre alphabétique. Le professeur peut en ajouter ou en masquer. Les barèmes s'adaptent à la durée choisie.</li>
+                    <li><strong>Tirs laser :</strong> tirs à 3 m, 5 m ou 8 m. Le coach valide chaque tir réussi, les points par tir sont réglables par le professeur.</li>
+                    <li><strong>Résultats :</strong> score total, détail par exercice, badges de performance, graphique de progression des tirs.</li>
+                    <li><strong>Classement :</strong> classement de la classe sauvegardé localement sur la tablette.</li>
+                    <li><strong>Export :</strong> fichier CSV (compatible Excel) et QR Code pour un partage rapide.</li>
+                    <li><strong>Nouvelle observation :</strong> un dispensé peut observer jusqu'à 5 pratiquants différents sans reconfigurer la séance.</li>
+                </ul>
+
+                <h4>💾 Sauvegarde et reprise</h4>
+                <ul>
+                    <li>La séance est <strong>sauvegardée automatiquement</strong> : une fermeture accidentelle, un appel ou une mise en veille ne fait rien perdre.</li>
+                    <li>À la réouverture, l'application propose de <strong>reprendre la séance</strong>. L'atelier en cours repart de zéro, les ateliers déjà terminés et les observations archivées sont conservés.</li>
+                    <li>Sur tablette (APK), le bouton Retour demande une confirmation avant de quitter une séance en cours.</li>
+                    <li>Les données restent sur l'appareil : aucune donnée d'élève n'est envoyée sur internet.</li>
                 </ul>
 
                 <h4>🔐 Configuration professeur</h4>
                 <ul>
                     <li>Accessible via <strong>Réglages → Configuration avancée</strong> (mot de passe : demander au professeur).</li>
-                    <li>Permet de modifier les barèmes de tous les exercices et les points de tir.</li>
-                    <li>Bouton « Réinitialiser aux valeurs par défaut » pour revenir aux barèmes d'origine.</li>
+                    <li><strong>Barèmes :</strong> chaque exercice a sa fiche, qui se déplie d'un appui sur son nom. Une seule fiche est ouverte à la fois.</li>
+                    <li><strong>Menu des exercices :</strong> décocher « Afficher dans le menu » dans la fiche d'un exercice pour le masquer du choix des exercices, puis enregistrer.</li>
+                    <li><strong>Ajouter un exercice :</strong> bouton « Nouvel exercice » (nom, description facultative et paliers de points). L'exercice ajouté peut être supprimé depuis sa fiche.</li>
+                    <li><strong>Points de tir</strong> modifiables pour chaque distance.</li>
+                    <li><strong>Mot de passe</strong> modifiable en bas du panneau.</li>
+                    <li>« Réinitialiser aux valeurs par défaut » remet les points des barèmes à leurs valeurs d'origine.</li>
+                    <li>Ces réglages sont propres à chaque appareil.</li>
                 </ul>
 
                 <h4>📱 Installation sur tablette Android (APK)</h4>
@@ -7083,26 +7096,27 @@
                     <li>Transférer le fichier <strong>.apk</strong> sur la tablette (USB, partage Wi-Fi, QR code).</li>
                     <li>Activer « Sources inconnues » dans les paramètres si nécessaire.</li>
                     <li>Ouvrir le fichier APK et installer.</li>
-                    <li>L'application fonctionne <strong>100% hors-ligne</strong>, aucune connexion internet nécessaire.</li>
+                    <li>L'application fonctionne <strong>100% hors-ligne</strong>, aucune connexion internet n'est nécessaire.</li>
                 </ul>
 
                 <h4>📱 Installation sur smartphone/tablette (PWA)</h4>
                 <ul>
-                    <li><strong>Android (Chrome) :</strong> Ouvrir le site web → menu ⋮ → « Ajouter à l'écran d'accueil ».</li>
-                    <li><strong>iPhone/iPad (Safari) :</strong> Ouvrir le site web → bouton partage ↑ → « Sur l'écran d'accueil ».</li>
+                    <li><strong>Android (Chrome) :</strong> ouvrir le site web → menu ⋮ → « Ajouter à l'écran d'accueil ».</li>
+                    <li><strong>iPhone/iPad (Safari) :</strong> ouvrir le site web → bouton partage ↑ → « Sur l'écran d'accueil ».</li>
                     <li>L'application s'installe comme une app native et fonctionne hors-ligne après le premier chargement.</li>
+                    <li><strong>Mise à jour :</strong> la nouvelle version est récupérée au lancement quand une connexion est disponible, puis prise en compte au lancement suivant.</li>
                 </ul>
 
                 <h4>⚙️ Réglages disponibles</h4>
                 <ul>
-                    <li><strong>Thème de couleur :</strong> 4 thèmes visuels au choix.</li>
-                    <li><strong>Bips sonores :</strong> Signal de début/fin d'exercice.</li>
-                    <li><strong>Mode sombre :</strong> Réduit la luminosité pour l'usage en extérieur.</li>
-                    <li><strong>Date/Heure auto :</strong> Mise à jour automatique à chaque séance.</li>
+                    <li><strong>Thème de couleur :</strong> plusieurs thèmes visuels au choix.</li>
+                    <li><strong>Bips sonores :</strong> signal de début et de fin d'exercice.</li>
+                    <li><strong>Mode sombre :</strong> réduit la luminosité pour l'usage en extérieur.</li>
+                    <li><strong>Date/Heure auto :</strong> mise à jour automatique à chaque séance.</li>
                 </ul>
 
                 <p style="text-align: center; margin-top: 20px; color: var(--text-dim);">
-                    <em>Créé par Nathalie Prenois — Collège Mont Saint Jean</em>
+                    <em>Créé par Nathalie Prenois - Collège Mont Saint Jean</em>
                 </p>
             </div>
             <div class="modal-footer">
