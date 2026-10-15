@@ -2263,6 +2263,15 @@
         }
 
         // Nom de fichier sûr (ASCII, sans séparateur de chemin)
+        // Nom d'export CSV : laserfit_classe_AAAA-MM-JJ_HH-MM.csv
+        function csvExportName(className) {
+            const d = new Date();
+            const p = n => String(n).padStart(2, '0');
+            const date = `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+            const heure = `${p(d.getHours())}-${p(d.getMinutes())}`;
+            return `laserfit_${safeFileName(className, 'classe')}_${date}_${heure}.csv`;
+        }
+
         function safeFileName(s, fallback) {
             const clean = String(s === null || s === undefined ? '' : s)
                 .normalize('NFD').replace(/[̀-ͯ]/g, '')
@@ -6169,9 +6178,7 @@
             
             // Télécharger
             const BOM = '\uFEFF';
-            const filename = nbEquipes === 1
-                ? `laserfit_team_${safeFileName(state.teams[0].name, 'equipe')}_${state.teamMatchId}.csv`
-                : `laserfit_team_match_${state.teamMatchId}.csv`;
+            const filename = csvExportName(state.className);
             const fullContent = BOM + csv;
 
             // Téléchargement : APK WebView → interface Android, sinon fallback blob
@@ -6695,9 +6702,8 @@
             // Ajouter le BOM UTF-8 pour Excel
             const BOM = '\uFEFF';
 
-            // Nom de fichier : LaserFit_AAAA-MM-DD_classe.csv
-            const safeClass = safeFileName(state.className, 'classe');
-            const filename = `LaserFit_${state.sessionDate}_${safeClass}.csv`;
+            // Nom de fichier : laserfit_classe_AAAA-MM-JJ_HH-MM.csv
+            const filename = csvExportName(state.className);
 
             // Téléchargement : APK WebView → interface Android, sinon fallback blob
             const fullContent = BOM + csvContent;
