@@ -8,6 +8,10 @@
 keystore.properties
 local.properties
 google-services.json
+signing-key-info.txt
+
+# APK de release — attachées via gh release, jamais committées dans l'historique
+*.apk
 
 # Système
 .DS_Store
