@@ -4,7 +4,7 @@ LaserFit est une application d'EPS (fitness en format Tabata alterné avec du ti
 
 Ce projet Android embarque la PWA **en local** (`app/src/main/assets/`) et l'affiche dans une **WebView** via `WebViewAssetLoader`, ce qui fournit une origine HTTPS (`https://appassets.androidplatform.net/`) compatible avec le Service Worker.
 
-- **Version** : 2.3 (versionCode 5)
+- **Version** : 2.4 (versionCode 6)
 - **Version web** : https://apps.outils-eps.fr/epslaserfit/ (dépôt `msjeps/epslaserfit`)
 - **Orientation** : portrait
 

@@ -1785,7 +1785,7 @@
     <div class="container">
         <div class="header">
             <h1>⚡ Laser Fit ⚡</h1>
-            <p class="version-app">Version 2.3</p>
+            <p class="version-app">Version 2.4</p>
             <div class="subtitle">Fitness + Tir Laser de Précision</div>
             <button class="settings-btn" onclick="openSettings()" title="Réglages">
                 <span>⚙️</span>
@@ -2482,9 +2482,12 @@
         const ADMIN_SALT = 'laserfit-eps|';
         const ADMIN_DEFAULT_HASH = 'a384d21dc8e33b739a0a236295195c4fa0391a881e3e0922199cee5d03fbb4d3';
         const ADMIN_HASH_KEY = 'laserfit-admin-hash';
-        // Après ce nombre de mots de passe erronés consécutifs, retour au mot de passe initial
+        // Après ce nombre de mots de passe erronés consécutifs, le panneau est verrouillé
+        // pendant ADMIN_LOCK_MS (le mot de passe personnalisé n'est jamais effacé par les échecs).
         const ADMIN_MAX_FAILS = 5;
         const ADMIN_FAILS_KEY = 'laserfit-admin-fails';
+        const ADMIN_LOCK_KEY = 'laserfit-admin-lock-until';
+        const ADMIN_LOCK_MS = 15 * 60 * 1000;
 
         // SHA-256 en JS pur (synchrone, sans dépendance : crypto.subtle absent hors contexte sécurisé)
         function sha256Hex(msg) {
@@ -2558,16 +2561,38 @@
             document.getElementById('adminNewPwd').value = '';
             document.getElementById('adminNewPwd2').value = '';
             document.getElementById('adminDefaultPwdNotice').style.display = 'none';
-            alert('Mot de passe modifié. Notez-le : il n\'est pas récupérable (effacer les données de l\'app rétablit le mot de passe initial).');
+            alert('Mot de passe modifié. Notez-le : il n\'est pas récupérable (en cas d\'oubli, effacer les données de l\'app rétablit le mot de passe initial et efface aussi les réglages de cette tablette).');
+        }
+
+        // Minutes restantes avant la fin du verrouillage (0 si le panneau n'est pas verrouillé).
+        // Une horloge reculée ne peut pas prolonger le verrou au-delà de ADMIN_LOCK_MS.
+        function adminLockMinutesLeft() {
+            let until = 0;
+            try { until = parseInt(localStorage.getItem(ADMIN_LOCK_KEY), 10) || 0; } catch (e) { return 0; }
+            let left = until - Date.now();
+            if (left > ADMIN_LOCK_MS) {
+                // Horloge reculée : ramener le verrou à sa durée normale (il finira par expirer)
+                left = ADMIN_LOCK_MS;
+                try { localStorage.setItem(ADMIN_LOCK_KEY, String(Date.now() + left)); } catch (e) { /* ignore */ }
+            }
+            return left > 0 ? Math.ceil(left / 60000) : 0;
         }
 
         function checkAdminPwd() {
             const input = document.getElementById('adminPwd');
             const pwd = input.value || '';
+            input.value = '';
+            const minutes = adminLockMinutesLeft();
+            if (minutes > 0) {
+                alert('Trop d\'erreurs : accès verrouillé encore ' + minutes + ' min.');
+                return;
+            }
             const hash = getAdminHash();
             if (sha256Hex(ADMIN_SALT + pwd) === hash) {
-                input.value = '';
-                try { localStorage.removeItem(ADMIN_FAILS_KEY); } catch (e) { /* ignore */ }
+                try {
+                    localStorage.removeItem(ADMIN_FAILS_KEY);
+                    localStorage.removeItem(ADMIN_LOCK_KEY);
+                } catch (e) { /* ignore */ }
                 document.getElementById('adminLogin').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
                 document.getElementById('adminDefaultPwdNotice').style.display =
@@ -2575,19 +2600,16 @@
                 buildAdminBaremes();
                 buildAdminShooting();
             } else {
-                input.value = '';
                 if (navigator.vibrate) navigator.vibrate(200);
                 // Compteur d'échecs persistant (survit au redémarrage de l'app)
                 let fails = 0;
                 try { fails = (parseInt(localStorage.getItem(ADMIN_FAILS_KEY), 10) || 0) + 1; } catch (e) { fails = 1; }
-                if (hash !== ADMIN_DEFAULT_HASH && fails >= ADMIN_MAX_FAILS) {
-                    try {
-                        localStorage.removeItem(ADMIN_HASH_KEY);
-                        localStorage.removeItem(ADMIN_FAILS_KEY);
-                    } catch (e) { /* ignore */ }
-                    alert('Trop d\'erreurs : le mot de passe a été réinitialisé au mot de passe initial.');
+                try { localStorage.setItem(ADMIN_FAILS_KEY, String(fails)); } catch (e) { /* ignore */ }
+                if (fails >= ADMIN_MAX_FAILS) {
+                    // Chaque nouvel échec après le seuil relance un verrouillage complet
+                    try { localStorage.setItem(ADMIN_LOCK_KEY, String(Date.now() + ADMIN_LOCK_MS)); } catch (e) { /* ignore */ }
+                    alert('Trop d\'erreurs : accès verrouillé ' + (ADMIN_LOCK_MS / 60000) + ' min.');
                 } else {
-                    try { localStorage.setItem(ADMIN_FAILS_KEY, String(fails)); } catch (e) { /* ignore */ }
                     alert('Mot de passe incorrect');
                 }
             }
@@ -7540,7 +7562,7 @@
                     <li><strong>Menu des exercices :</strong> décocher « Afficher dans le menu » dans la fiche d'un exercice pour le masquer du choix des exercices, puis enregistrer.</li>
                     <li><strong>Ajouter un exercice :</strong> bouton « Nouvel exercice » (nom, description facultative et paliers de points). L'exercice ajouté peut être supprimé depuis sa fiche.</li>
                     <li><strong>Points de tir</strong> modifiables pour chaque distance.</li>
-                    <li><strong>Mot de passe</strong> modifiable en bas du panneau.</li>
+                    <li><strong>Mot de passe</strong> modifiable en bas du panneau (6 caractères minimum). Après 5 erreurs, l'accès est verrouillé 15 minutes.</li>
                     <li>« Réinitialiser aux valeurs par défaut » remet les points des barèmes à leurs valeurs d'origine.</li>
                     <li>Ces réglages sont propres à chaque appareil.</li>
                 </ul>
