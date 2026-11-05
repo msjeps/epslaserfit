@@ -4,13 +4,14 @@ LaserFit est une application d'EPS (fitness en format Tabata alterné avec du ti
 
 Ce projet Android embarque la PWA **en local** (`app/src/main/assets/`) et l'affiche dans une **WebView** via `WebViewAssetLoader`, ce qui fournit une origine HTTPS (`https://appassets.androidplatform.net/`) compatible avec le Service Worker.
 
-- **Version** : 2.5 (versionCode 7)
+- **Version** : 2.6 (versionCode 8)
 - **Version web** : https://apps.outils-eps.fr/epslaserfit/ (dépôt `msjeps/epslaserfit`)
 - **Orientation** : portrait
 
 ## Fonctionnalités
 - Mode **solo** (jusqu'à 5 observations archivées avant export) et mode **équipe** (relais) : une équipe par tablette (jusqu'à 8 tablettes en simultané) ou 2 à 4 équipes à tour de rôle sur une tablette
 - **Gestion du mode équipes** (tablette enseignant) : nombre d'équipes (2 à 8) et couleurs, saisie ou **scan du QR** de chaque tablette, classement en **total** ou **moyenne par passage**
+- Séance **complète, d'exercices uniquement ou de tirs uniquement** (élève dispensé d'exercice : « Nombre d'exercices » à 0)
 - Exercices de fitness avec barèmes de points adaptés à la durée, séries de tir laser à 3, 5 ou 8 m
 - Chronomètre Tabata, compteurs de répétitions et de tirs, bips et vibrations
 - Résultats, badges, classement de classe, graphique de progression du tir
