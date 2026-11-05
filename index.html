@@ -1839,7 +1839,7 @@
     <div class="container">
         <div class="header">
             <h1>⚡ Laser Fit ⚡</h1>
-            <p class="version-app">Version 2.5</p>
+            <p class="version-app">Version 2.6</p>
             <div class="subtitle">Fitness + Tir Laser de Précision</div>
             <button class="settings-btn" onclick="openSettings()" title="Réglages">
                 <span>⚙️</span>
@@ -2037,12 +2037,14 @@
                 
                 <div class="form-group">
                     <label for="numExercises">Nombre d'exercices à effectuer</label>
-                    <input type="number" id="numExercises" min="1" max="20" value="4" onchange="updateExerciseList()">
+                    <input type="number" id="numExercises" min="0" max="20" value="4" onchange="updateExerciseList()">
+                    <small style="display:block;margin-top:6px;color:#444;">Mettre 0 pour une séance de tirs uniquement (élève dispensé d'exercice).</small>
                 </div>
                 
                 <div class="form-group">
                     <label for="numShootingSessions">Nombre de sessions de tirs</label>
                     <input type="number" id="numShootingSessions" min="0" max="5" value="1" onchange="updateExerciseList()">
+                    <small style="display:block;margin-top:6px;color:#444;">Mettre 0 pour une séance d'exercices uniquement (sans tir).</small>
                 </div>
                 
                 <div class="form-group">
@@ -3829,8 +3831,8 @@
         
         function updateExerciseList() {
             const list = document.getElementById('exerciseList');
-            const numExercises = parseInt(document.getElementById('numExercises').value);
-            const numShootingSessions = parseInt(document.getElementById('numShootingSessions').value);
+            const numExercises = parseInt(document.getElementById('numExercises').value) || 0;
+            const numShootingSessions = parseInt(document.getElementById('numShootingSessions').value) || 0;
             const selector = document.getElementById('exerciseSelector');
             
             // Créer une liste complète avec exercices + tirs
@@ -3853,8 +3855,13 @@
                 }
             }
             
+            // Aucun exercice demandé : on retire les exercices déjà choisis (séance de tirs seule)
+            const finalSequence = numExercises === 0
+                ? completeSequence.filter(e => e.includes('🎯 TIR LASER'))
+                : completeSequence;
+            
             // Mettre à jour state.exercises pour inclure les tirs
-            state.exercises = completeSequence;
+            state.exercises = finalSequence;
             
             if (state.exercises.length === 0) {
                 list.innerHTML = '';
@@ -3923,6 +3930,20 @@
             // Compter seulement les exercices (pas les tirs) pour le maximum
             const exercisesOnly = state.exercises.filter(e => !e.includes('🎯 TIR LASER'));
             
+            if (numExercises === 0) {
+                selector.disabled = true;
+                selector.style.opacity = '0.5';
+                selector.style.cursor = 'not-allowed';
+                const message = document.createElement('div');
+                message.style.color = 'var(--success)';
+                message.style.fontSize = '0.9rem';
+                message.style.marginTop = '10px';
+                message.style.fontWeight = '600';
+                message.textContent = '✓ Séance de tirs uniquement (aucun exercice)';
+                list.appendChild(message);
+                return;
+            }
+            
             // Désactiver le sélecteur si on a atteint le nombre max d'exercices
             if (exercisesOnly.length >= numExercises) {
                 selector.disabled = true;
@@ -3979,15 +4000,20 @@
         }
         
         function startSession() {
-            const numExercises = parseInt(document.getElementById('numExercises').value);
-            const numShootingSessions = parseInt(document.getElementById('numShootingSessions').value);
+            const numExercises = parseInt(document.getElementById('numExercises').value) || 0;
+            const numShootingSessions = parseInt(document.getElementById('numShootingSessions').value) || 0;
             const exerciseTime = parseInt(document.getElementById('exerciseTime').value);
             const pauseTime = parseInt(document.getElementById('pauseTime').value);
             
             // Compter seulement les exercices (pas les tirs)
             const exercisesOnly = state.exercises.filter(ex => !ex.includes('🎯 TIR LASER'));
             
-            if (exercisesOnly.length === 0) {
+            if (numExercises === 0 && numShootingSessions === 0) {
+                alert('Il faut au moins un exercice ou une session de tirs.');
+                return;
+            }
+            
+            if (numExercises > 0 && exercisesOnly.length === 0) {
                 alert('Veuillez ajouter au moins un type d\'exercice !');
                 return;
             }
@@ -7703,6 +7729,7 @@
                     <li><strong>Une équipe par tablette :</strong> choisissez « Une équipe par tablette » sur chaque tablette. À la fin, la tablette affiche en grand le total et la moyenne de l'équipe : l'observateur les annonce.</li>
                     <li><strong>Gestion du mode équipes :</strong> sur la tablette de l'enseignant (bouton à l'écran d'accueil). Choisissez le nombre d'équipes qui s'affrontent (2 à 8) et la couleur de chacune : donnez une couleur à chaque tablette. Les élèves ouvrent le mode équipe, choisissent la couleur attribuée (à ne plus changer) et peuvent renommer l'équipe. En fin de relais, scannez le QR de chaque tablette (bouton « Scanner ») ou saisissez le total et les passages à la main, puis choisissez le calcul : total des points ou moyenne par passage (équitable si les équipes n'ont pas le même nombre de passages).</li>
                     <li><strong>Exercices :</strong> 14 exercices proposés (jumping jacks, 1/2 burpees, 1/2 squats, pompes inclinées, planches militaires, step ups, etc.), classés par ordre alphabétique. Un exercice déjà choisi n'est plus proposé dans la liste (il revient si on le supprime de la séance). Le professeur peut en ajouter ou en masquer. Les barèmes s'adaptent à la durée choisie.</li>
+                    <li><strong>Séance partielle :</strong> à l'écran de configuration, mettre « Nombre d'exercices » à 0 pour une séance de <strong>tirs uniquement</strong> (élève dispensé d'exercice), ou « Nombre de sessions de tirs » à 0 pour une séance d'<strong>exercices uniquement</strong>.</li>
                     <li><strong>Tirs laser :</strong> tirs à 3 m, 5 m ou 8 m. Le coach valide chaque tir réussi, les points par tir sont réglables par le professeur.</li>
                     <li><strong>Résultats :</strong> score total, détail par exercice, badges de performance, graphique de progression des tirs.</li>
                     <li><strong>Classement :</strong> classement de la classe sauvegardé localement sur la tablette.</li>
