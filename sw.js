@@ -1,5 +1,5 @@
 // Service Worker Laser Fit - Version optimisée pour PWA Builder
-const CACHE_NAME = "laserfit-v23";
+const CACHE_NAME = "laserfit-v24";
 
 // Liste complète des assets - tous les fichiers existent
 const ASSETS = [
