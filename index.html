@@ -1839,7 +1839,7 @@
     <div class="container">
         <div class="header">
             <h1>⚡ Laser Fit ⚡</h1>
-            <p class="version-app">Version 2.6</p>
+            <p class="version-app">Version 2.7</p>
             <div class="subtitle">Fitness + Tir Laser de Précision</div>
             <button class="settings-btn" onclick="openSettings()" title="Réglages">
                 <span>⚙️</span>
@@ -2274,9 +2274,9 @@
             <!-- Info observations archivées -->
             <div id="pendingObsInfo" class="pending-obs-info" style="display: none;"></div>
 
-            <!-- Bouton Nouvelle observation (même observateur) -->
+            <!-- Bouton Nouvelle observation (config conservée, noms vidés) -->
             <button id="btnNewObs" class="btn-new-obs" onclick="newObservation()">
-                ↩ Nouvelle observation (même observateur)
+                ↩ Nouvelle observation
             </button>
 
             <!-- Bouton classement -->
@@ -2851,8 +2851,9 @@
             const obsCount = pendingRows.length;
             alert('Observation ' + obsCount + '/' + MAX_OBSERVATIONS + ' archivée pour ' + state.studentName);
 
-            // Conserver : observateur, classe, groupe, config exercices/temps
-            const keepObserver = state.observerName;
+            // Conserver uniquement la configuration de la séance (classe, groupe, exercices, temps) :
+            // ni le pratiquant ni l'observateur ne sont repris
+            const keepObserver = '';
             const keepClass = state.className;
             const keepGroup = state.groupName;
             const keepExercises = state.exercises.slice();
@@ -2902,8 +2903,9 @@
             state.sessionDate = keepDate;
             state.sessionTime = keepTime;
             state.studentName = '';
+            state.observerName = '';
 
-            // Vider le champ pratiquant et retourner à l'écran info
+            // Vider les champs pratiquant et observateur et retourner à l'écran info
             document.getElementById('studentName').value = '';
             document.getElementById('observerName').value = keepObserver;
             document.getElementById('className').value = keepClass;
@@ -2937,7 +2939,7 @@
             } else {
                 btn.disabled = false;
                 btn.style.opacity = '1';
-                btn.textContent = '↩ Nouvelle observation (même observateur)';
+                btn.textContent = '↩ Nouvelle observation';
             }
         }
 
@@ -6851,9 +6853,14 @@
             if (allObs.length === 0) return;
 
             // Construire le payload multi-lignes compatible SCAN EPS
-            const header = 'LASERFIT|' + qrField(state.className) + '|' + qrField(state.sessionDate) + '|' + qrField(state.observerName);
+            // L'observateur de l'en-tête est celui de la 1re observation ; chaque ligne d'un autre
+            // observateur porte le sien (« pratiquant|observateur »), sinon le dernier observateur
+            // saisi écrasait celui des observations archivées dans SCAN EPS.
+            const headObserver = qrField(allObs[0].observerName);
+            const header = 'LASERFIT|' + qrField(state.className) + '|' + qrField(state.sessionDate) + '|' + headObserver;
             const dataLines = allObs.map(obs => {
-                const parts = [qrField(obs.studentName)];
+                const lineObs = qrField(obs.observerName);
+                const parts = [qrField(obs.studentName) + (lineObs !== headObserver ? '|' + lineObs : '')];
                 obs.results.forEach(r => {
                     // Nom exercice abrégé (max 8 car.)
                     const shortName = (r.name || '').substring(0, 8);
@@ -7734,7 +7741,7 @@
                     <li><strong>Résultats :</strong> score total, détail par exercice, badges de performance, graphique de progression des tirs.</li>
                     <li><strong>Classement :</strong> classement de la classe sauvegardé localement sur la tablette.</li>
                     <li><strong>Export :</strong> fichier CSV (compatible Excel) et QR Code pour un partage rapide.</li>
-                    <li><strong>Nouvelle observation :</strong> un dispensé peut observer jusqu'à 5 pratiquants différents sans reconfigurer la séance.</li>
+                    <li><strong>Nouvelle observation :</strong> un dispensé peut observer jusqu'à 5 pratiquants différents sans reconfigurer la séance (la configuration est conservée ; les noms du pratiquant et de l'observateur sont à ressaisir).</li>
                 </ul>
 
                 <h4>💾 Sauvegarde et reprise</h4>
